@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===============================
+   HappyKidsBD Design System
+================================ */
+
+:root {
+  /* Brand Colors */
+  --color-primary: #26bdff;
+  --color-secondary: #f74c83;
+  --color-accent: #f9e553;
+
+  /* Neutral */
+  --color-white: #ffffff;
+  --color-black: #1f2937;
+
+  --color-text: #374151;
+  --color-muted: #6b7280;
+
+  --color-bg: #f8fafc;
+
+  --color-border: #e5e7eb;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Shadow */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.05);
+
+  --shadow-md: 0 8px 20px rgba(0,0,0,.08);
+
+  --shadow-lg: 0 12px 35px rgba(0,0,0,.12);
+
+  /* Container */
+  --container: 1440px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-nunito), var(--font-hind), sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Typography */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-black);
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
