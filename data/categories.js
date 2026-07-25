@@ -38,7 +38,7 @@ export const categories = [
     slug: "shoes",
     icon: Footprints,
     bgColor: "bg-green-50",
-    iconColor: "text-green-500",
+    iconColor: "text-primary",
   },
   {
     id: 5,
@@ -46,7 +46,7 @@ export const categories = [
     slug: "toys",
     icon: ToyBrick,
     bgColor: "bg-purple-50",
-    iconColor: "text-purple-500",
+    iconColor: "text-mint-500",
   },
   {
     id: 6,
@@ -54,6 +54,6 @@ export const categories = [
     slug: "accessories",
     icon: Backpack,
     bgColor: "bg-orange-50",
-    iconColor: "text-orange-500",
+    iconColor: "text-lavender-500",
   },
 ];

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export default function CategoryCard({ category }) {
+  console.log(category);
   const Icon = category.icon;
 
   return (
@@ -38,11 +39,8 @@ export default function CategoryCard({ category }) {
           group-hover:rotate-6
         `}
       >
-        <Icon
-          size={40}
-          strokeWidth={2}
-          className={category.iconColor}
-        />
+        <Icon size={40} strokeWidth={2} className={category.iconColor} />
+        
       </div>
 
       <h3

@@ -1,6 +1,6 @@
 import Section from "@/components/ui/Section";
-import HeroContent from "@/components/home/HeroContent";
-import HeroImage from "@/components/home/HeroImage";
+import HeroContent from "@/components/home/hero/HeroContent";
+import HeroImage from "@/components/home/hero/HeroImage";
 
 export default function Hero() {
   return (

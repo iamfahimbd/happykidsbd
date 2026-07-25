@@ -1,6 +1,7 @@
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/footer/Footer";
 import { Hind_Siliguri, Nunito } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
 
 const hind = Hind_Siliguri({
   subsets: ["bengali", "latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
       <body className={`${hind.variable} ${nunito.variable}`}>
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

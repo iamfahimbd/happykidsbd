@@ -1,7 +1,7 @@
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
 import CategoryCard from "./CategoryCard";
-import { categories } from "@/components/data/categories";
+import { categories } from "@/data/categories";
 
 export default function CategorySection() {
   return (

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import HeroBadge from "@/components/home/HeroBadge";
+import HeroBadge from "@/components/home/hero/HeroBadge";
 
 export default function HeroImage() {
   return (

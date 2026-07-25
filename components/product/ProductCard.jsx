@@ -1,6 +1,6 @@
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Star, ShoppingCart } from "lucide-react";
 
 export default function ProductCard({ product }) {
   return (
@@ -90,20 +90,15 @@ export default function ProductCard({ product }) {
 
       {/* Content */}
 
-      <div className="space-y-4 p-5">
+      <div className="space-y-4 p-3 md:p-4">
         {/* Rating */}
 
-        <div className="flex items-center gap-2">
-          <Star
-            size={16}
-            className="fill-yellow-400 text-yellow-400"
-          />
+        <div className="flex items-center gap-2  ">
+          <Star size={16} className="fill-yellow-400 text-yellow-400 " />
 
           <span className="text-sm text-gray-600">
             {product.rating}
-            <span className="ml-1 text-gray-400">
-              ({product.reviews})
-            </span>
+            <span className="ml-1 text-gray-400">({product.reviews})</span>
           </span>
         </div>
 
@@ -113,8 +108,10 @@ export default function ProductCard({ product }) {
           href={`/product/${product.slug}`}
           className="
             line-clamp-2
-            text-lg
+            text-sm
+            md:text-lg
             font-semibold
+            
             text-gray-900
             transition-colors
             hover:text-primary
@@ -126,12 +123,12 @@ export default function ProductCard({ product }) {
         {/* Price */}
 
         <div className="flex items-center gap-3">
-          <span className="text-xl font-bold text-primary">
+          <span className="text-base font-bold md:text-xl text-primary">
             ৳{product.price}
           </span>
 
           {product.oldPrice && (
-            <span className="text-sm text-gray-400 line-through">
+            <span className="text-xs md:text-base text-red-500 line-through">
               ৳{product.oldPrice}
             </span>
           )}
@@ -148,8 +145,11 @@ export default function ProductCard({ product }) {
             gap-2
             rounded-full
             bg-primary
-            py-3
-            font-semibold
+            py-2
+            text-sm
+            md:py-3
+            md:text-base
+            font-medium
             text-white
             transition-all
             duration-300
