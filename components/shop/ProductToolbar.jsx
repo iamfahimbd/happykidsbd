@@ -89,7 +89,7 @@ export default function ProductToolbar() {
         open={openFilter}
         onClose={() => setOpenFilter(false)}
       >
-        <FilterSidebar />
+        <FilterSidebar mobile />
       </MobileFilterDrawer>
     </div>
   );

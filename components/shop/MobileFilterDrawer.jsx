@@ -2,11 +2,7 @@
 
 import { X } from "lucide-react";
 
-export default function MobileFilterDrawer({
-  open,
-  onClose,
-  children,
-}) {
+export default function MobileFilterDrawer({ open, onClose, children }) {
   return (
     <>
       {/* Overlay */}
@@ -14,13 +10,15 @@ export default function MobileFilterDrawer({
       <div
         onClick={onClose}
         className={`
-          fixed inset-0 z-40 bg-black/40 transition-opacity duration-300
+          fixed
+          inset-0
+          z-40
+          bg-black/40
+          backdrop-blur-[2px]
+          transition-all
+          duration-300
 
-          ${
-            open
-              ? "opacity-100 visible"
-              : "opacity-0 invisible"
-          }
+          ${open ? "visible opacity-100" : "invisible opacity-0"}
         `}
       />
 
@@ -29,44 +27,66 @@ export default function MobileFilterDrawer({
       <aside
         className={`
           fixed
-          top-0
-          left-0
-          z-50
-          h-screen
-          w-[320px]
-          max-w-[90vw]
+    left-0
+    top-16
+    bottom-16
 
-          bg-white
-          shadow-2xl
+    z-50
 
-          transition-transform
-          duration-300
+    w-[88vw]
+    max-w-[360px]
 
-          ${
-            open
-              ? "translate-x-0"
-              : "-translate-x-full"
-          }
+    flex
+    flex-col
+
+    bg-white
+    shadow-2xl
+
+    transition-transform
+    duration-300
+
+          ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Header */}
 
-        <div className="flex items-center justify-between border-b p-5">
-          <h2 className="text-xl font-bold">
-            Filters
-          </h2>
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            border-b
+            bg-white
+            px-5
+            py-4
+            shrink-0
+          "
+        >
+          <h2 className="text-xl font-bold">Filters</h2>
 
           <button
             onClick={onClose}
-            className="rounded-lg p-2 hover:bg-gray-100"
+            className="
+              rounded-xl
+              p-2
+              transition
+              hover:bg-gray-100
+            "
           >
             <X size={22} />
           </button>
         </div>
 
-        {/* Body */}
+        {/* Scrollable Body */}
 
-        <div className="overflow-y-auto p-5">
+        <div
+          className="
+            flex-1
+            overflow-y-auto
+            px-5
+            py-5
+          "
+        >
           {children}
         </div>
       </aside>

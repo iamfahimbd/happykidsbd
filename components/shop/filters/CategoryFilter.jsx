@@ -1,9 +1,34 @@
 import { categories } from "@/data/categories";
-import FilterSection from "./FilterSection";
+import FilterAccordion from "./FilterAccordion";
+import { useShopFilter } from "@/context/ShopFilterContext";
 
-export default function CategoryFilter() {
+export default function CategoryFilter({
+  
+}) {
+   const {
+    selectedCategories,
+    setSelectedCategories,
+  } = useShopFilter();
+  const handleCategoryChange = (slug) => {
+    if (selectedCategories.includes(slug)) {
+      setSelectedCategories(
+        selectedCategories.filter(
+          (category) => category !== slug
+        )
+      );
+    } else {
+      setSelectedCategories([
+        ...selectedCategories,
+        slug,
+      ]);
+    }
+  };
+
   return (
-    <FilterSection title="Categories">
+    <FilterAccordion
+      title="Categories"
+      defaultOpen={true}
+    >
       <div className="space-y-3">
         {categories.map((category) => (
           <label
@@ -12,6 +37,12 @@ export default function CategoryFilter() {
           >
             <input
               type="checkbox"
+              checked={selectedCategories.includes(
+                category.slug
+              )}
+              onChange={() =>
+                handleCategoryChange(category.slug)
+              }
               className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             />
 
@@ -21,6 +52,6 @@ export default function CategoryFilter() {
           </label>
         ))}
       </div>
-    </FilterSection>
+    </FilterAccordion>
   );
 }

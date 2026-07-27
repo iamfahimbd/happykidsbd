@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import Section from "@/components/ui/Section";
@@ -6,37 +8,41 @@ import SectionTitle from "@/components/ui/SectionTitle";
 
 import ProductGrid from "./ProductGrid";
 
+
 export default function ProductSection({
   title,
   subtitle,
   products,
   description,
+
   showHeader = true,
   showButton = true,
+
   viewAllLink = "/shop",
   viewAllText = "View All Products",
+
+  noSection = false,
+  noContainer = false,
 }) {
-  return (
-    <Section>
-      <Container>
-       {
-        showHeader && (
-           <SectionTitle
+
+
+  const content = (
+    <>
+      {showHeader && (
+        <SectionTitle
           subtitle={subtitle}
           title={title}
           description={description}
           align="center"
         />
-        )
-       }
+      )}
 
-        <div className="mt-10">
-          <ProductGrid products={products} />
-        </div>
+      <div className={showHeader ? "mt-10" : ""}>
+        <ProductGrid products={products}  />
+      </div>
 
-        {
-          showButton && (
-            <div className="mt-10 flex justify-center">
+      {showButton && (
+        <div className="mt-10 flex justify-center">
           <Link
             href={viewAllLink}
             className="
@@ -59,9 +65,19 @@ export default function ProductSection({
             {viewAllText}
           </Link>
         </div>
-          )
-        }
-      </Container>
-    </Section>
+      )}
+    </>
+  );
+
+  const wrappedContent = noContainer ? (
+    content
+  ) : (
+    <Container>{content}</Container>
+  );
+
+  return noSection ? (
+    wrappedContent
+  ) : (
+    <Section>{wrappedContent}</Section>
   );
 }

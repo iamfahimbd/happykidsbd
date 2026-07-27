@@ -1,14 +1,9 @@
 import Container from "@/components/ui/Container";
 
-export default function ShopLayout({
-  sidebar,
-  toolbar,
-  children,
-}) {
+export default function ShopLayout({ sidebar, toolbar, children }) {
   return (
     <Container>
       <div className="py-8 lg:py-10">
-
         {/* Toolbar */}
 
         <div
@@ -43,29 +38,12 @@ export default function ShopLayout({
           {/* Desktop Sidebar */}
 
           <aside className="hidden lg:block">
-            <div
-              className="
-                sticky
-                top-24
-
-                rounded-3xl
-                border
-                border-gray-200
-                bg-white
-                p-6
-
-                shadow-soft
-              "
-            >
-              {sidebar}
-            </div>
+            <div className="sticky top-24">{sidebar}</div>
           </aside>
 
           {/* Products */}
 
-          <main className="min-w-0">
-            {children}
-          </main>
+          <main className="min-w-0">{children}</main>
         </div>
       </div>
     </Container>
