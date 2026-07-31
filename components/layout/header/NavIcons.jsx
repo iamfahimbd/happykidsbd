@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { FiShoppingCart, FiUser } from "react-icons/fi";
+
 import MobileSearchButton from "./MobileSearchButton";
 
-export default function NavIcons({ mobile = false }) {
+export default function NavIcons({
+  mobile = false,
+}) {
   return (
-    <div className="flex items-center gap-4">
-      {/* Desktop এ User Icon দেখাবে, Mobile এ লুকানো থাকবে */}
+    <div className="flex items-center gap-6">
+      {/* Desktop User */}
+
       {!mobile && (
         <Link
           href="/account"
@@ -15,10 +19,12 @@ export default function NavIcons({ mobile = false }) {
         </Link>
       )}
 
-      {/* Mobile Search  Icon */}
-      <MobileSearchButton />
+      {/* Mobile Search */}
 
-      {/* Cart Icon */}
+      {mobile && <MobileSearchButton />}
+
+      {/* Cart */}
+
       <Link
         href="/cart"
         className="relative text-sky-600 transition hover:text-pink-500"
@@ -30,13 +36,17 @@ export default function NavIcons({ mobile = false }) {
             absolute
             -right-2
             -top-2
+
             flex
             h-5
             w-5
             items-center
             justify-center
+
             rounded-full
+
             bg-pink-500
+
             text-xs
             font-semibold
             text-white

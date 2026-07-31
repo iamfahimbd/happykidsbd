@@ -1,71 +1,85 @@
 "use client";
 
 import { FiSearch } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+
 import { useSearch } from "@/context/SearchContext";
 
 export default function SearchInput({
   inputRef,
-  placeholder = "Search products...",
   autoFocus = false,
-  rounded = true,
 }) {
+  const router = useRouter();
+
   const {
     searchQuery,
     setSearchQuery,
+    closeSearch,
   } = useSearch();
+
+  function handleSearch() {
+    const keyword = searchQuery.trim();
+
+    if (!keyword) return;
+
+    closeSearch();
+
+    router.push(
+      `/search?q=${encodeURIComponent(keyword)}`
+    );
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      handleSearch();
+    }
+  }
 
   return (
     <div className="relative w-full">
       <input
         ref={inputRef}
-        type="text"
         autoFocus={autoFocus}
-        placeholder={placeholder}
+        type="text"
+        placeholder="Search products..."
         value={searchQuery}
         onChange={(e) =>
           setSearchQuery(e.target.value)
         }
-        className={`
+        onKeyDown={handleKeyDown}
+        className="
           h-14
           w-full
 
+          rounded-full
+
           border-2
           border-border
-
-          bg-white
 
           pl-5
           pr-14
 
           outline-none
 
-          transition-all
-          duration-300
+          transition
 
           focus:border-primary
-          focus:ring-4
-          focus:ring-sky-100
-
-          ${
-            rounded
-              ? "rounded-full"
-              : "rounded-2xl"
-          }
-        `}
+        "
       />
 
-      <div
+      <button
+        type="button"
+        onClick={handleSearch}
         className="
           absolute
-          right-2
-          top-1/2
+          right-1
+          top-1
 
           flex
-          h-10
-          w-10
-
-          -translate-y-1/2
-
+          h-12
+          w-12
           items-center
           justify-center
 
@@ -75,11 +89,13 @@ export default function SearchInput({
 
           text-white
 
-          shadow-md
+          transition
+
+          hover:bg-secondary
         "
       >
         <FiSearch size={20} />
-      </div>
+      </button>
     </div>
   );
 }
