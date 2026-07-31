@@ -4,7 +4,7 @@ import MobileSearchButton from "./MobileSearchButton";
 
 export default function NavIcons({ mobile = false }) {
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex items-center gap-4">
       {/* Desktop এ User Icon দেখাবে, Mobile এ লুকানো থাকবে */}
       {!mobile && (
         <Link

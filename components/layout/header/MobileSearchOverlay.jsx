@@ -4,33 +4,32 @@ import { useEffect, useRef } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 
 import { useSearch } from "@/context/SearchContext";
+import useClickOutside from "@/hooks/useClickOutside";
+
+import SearchInput from "./SearchInput";
 import SearchSuggestions from "./SearchSuggestions";
 
 export default function MobileSearchOverlay() {
   const {
     isOpen,
-    setIsOpen,
-
-    searchQuery,
-    setSearchQuery,
+    closeSearch,
   } = useSearch();
 
+  const overlayRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Auto Focus
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    }
-  }, [isOpen]);
+  // Outside Click
+  useClickOutside(
+    overlayRef,
+    closeSearch,
+    isOpen
+  );
 
   // ESC Close
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") {
-        setIsOpen(false);
+        closeSearch();
       }
     }
 
@@ -44,97 +43,95 @@ export default function MobileSearchOverlay() {
         "keydown",
         handleKeyDown
       );
-  }, [setIsOpen]);
+  }, [closeSearch]);
+
+  // Auto Focus
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <div
-    onClick={() =>
-    console.log("Overlay")
-  }
       className="
         fixed
-    inset-0
-    z-[99999]
-    bg-white
-    lg:hidden
+        inset-0
+        z-[9999]
+
+        bg-black/30
+        backdrop-blur-sm
+
+        lg:hidden
       "
     >
-      {/* Header */}
-
       <div
+        ref={overlayRef}
         className="
           flex
-          items-center
-          gap-3
+          h-full
+          flex-col
 
-          border-b
-
-          px-4
-          py-4
+          bg-white
         "
       >
-        <button
-          onClick={() => setIsOpen(false)}
+        {/* Header */}
+
+        <div
           className="
             flex
-            h-10
-            w-10
             items-center
-            justify-center
+            gap-3
 
-            rounded-full
+            border-b
 
-            hover:bg-gray-100
+            p-4
           "
         >
-          <FiArrowLeft size={22} />
-        </button>
+          <button
+            onClick={closeSearch}
+            className="
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
 
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search products..."
+              rounded-full
 
-          value={searchQuery}
+              transition
+              hover:bg-slate-100
+            "
+          >
+            <FiArrowLeft size={22} />
+          </button>
 
-          onChange={(e) =>
-            setSearchQuery(e.target.value)
-          }
+          <SearchInput
+            inputRef={inputRef}
+            autoFocus
+          />
+        </div>
 
+        {/* Suggestions */}
+
+        <div
           className="
-            h-12
             flex-1
+            overflow-y-auto
 
-            rounded-full
-
-            border-2
-            border-border
-
-            px-5
-
-            outline-none
-
-            focus:border-primary
+            p-4
           "
-        />
-      </div>
-
-      {/* Suggestions */}
-
-      <div
-      onClick={() =>
-    console.log("Suggestion Area")
-  }
-        className="
-          relative
-
-          px-4
-          pt-4
-        "
-      >
-        <SearchSuggestions mobile/>
+        >
+          <SearchSuggestions
+            variant="mobile"
+          />
+        </div>
       </div>
     </div>
   );

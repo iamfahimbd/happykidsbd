@@ -9,35 +9,28 @@ import { useSearch } from "@/context/SearchContext";
 export default function SearchSuggestionItem({
   product,
 }) {
-  const {
-    searchQuery,
-    closeSearch,
-  } = useSearch();
+  const { searchQuery } = useSearch();
 
   return (
     <Link
-    
       href={`/product/${product.slug}`}
-      onClick={() => {
-    console.log("LINK CLICKED");
+        onClick={(e) => {
+    console.log("LINK");
   }}
-  
-      
+      prefetch={false}
       className="
         flex
-        w-full
         items-center
         gap-4
 
         px-5
-        py-3
-
-        text-left
+        py-4
 
         transition-all
         duration-200
 
-        hover:bg-slate-50
+        hover:bg-sky-50
+        active:scale-[0.99]
       "
     >
       {/* Product Image */}
@@ -46,13 +39,17 @@ export default function SearchSuggestionItem({
         className="
           relative
 
-          h-14
-          w-14
+          h-16
+          w-16
 
           shrink-0
 
           overflow-hidden
+
           rounded-2xl
+
+          border
+          border-slate-200
 
           bg-slate-100
         "
@@ -62,7 +59,7 @@ export default function SearchSuggestionItem({
             src={product.image}
             alt={product.name}
             fill
-            sizes="56px"
+            sizes="64px"
             className="object-cover"
           />
         ) : (
@@ -74,7 +71,7 @@ export default function SearchSuggestionItem({
               justify-center
 
               text-xs
-              text-gray-400
+              text-slate-400
             "
           >
             No Image
@@ -82,16 +79,17 @@ export default function SearchSuggestionItem({
         )}
       </div>
 
-      {/* Product Info */}
+      {/* Info */}
 
       <div className="min-w-0 flex-1">
         <h4
           className="
             truncate
 
+            text-sm
             font-semibold
 
-            text-gray-900
+            text-slate-900
           "
           dangerouslySetInnerHTML={{
             __html: highlightMatch(
@@ -105,15 +103,14 @@ export default function SearchSuggestionItem({
           className="
             mt-1
 
-            text-sm
+            truncate
 
-            capitalize
+            text-xs
 
-            text-gray-500
+            text-slate-500
           "
         >
           {product.categoryName ||
-            product.categorySlug ||
             "Product"}
         </p>
       </div>
@@ -129,6 +126,8 @@ export default function SearchSuggestionItem({
       >
         <p
           className="
+            text-sm
+
             font-bold
 
             text-primary
@@ -141,9 +140,11 @@ export default function SearchSuggestionItem({
           product.price && (
           <p
             className="
+              mt-1
+
               text-xs
 
-              text-gray-400
+              text-slate-400
 
               line-through
             "

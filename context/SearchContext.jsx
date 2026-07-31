@@ -1,43 +1,31 @@
 "use client";
 
 import {
-  isMatch,
-} from "@/lib/search/match";
-
-import {
   createContext,
   useContext,
   useMemo,
   useState,
+  useEffect,
 } from "react";
 
-import { usePathname,useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import {
+  usePathname,
+  useSearchParams,
+} from "next/navigation";
 
+import useDebounce from "@/hooks/useDebounce";
 
-
+import { isMatch } from "@/lib/search/match";
 
 const SearchContext = createContext(null);
 
-const closeSearch = () => {
-  setSearchQuery("");
-  setIsOpen(false);
-};
-
-
-
 export function SearchProvider({
   children,
-  products,
+  products = [],
 }) {
-
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-useEffect(() => {
-  setSearchQuery("");
-  setIsOpen(false);
-}, [pathname,searchParams]);
+  // =========================
+  // State
+  // =========================
 
   const [searchQuery, setSearchQuery] =
     useState("");
@@ -45,29 +33,47 @@ useEffect(() => {
   const [isOpen, setIsOpen] =
     useState(false);
 
+  // =========================
+  // Debounced Query
+  // =========================
+
+  const debouncedQuery =
+    useDebounce(searchQuery, 300);
+
+  // =========================
+  // Close on Route Change
+  // =========================
+
+  const pathname = usePathname();
+  const searchParams =
+    useSearchParams();
+
+  useEffect(() => {
+    setSearchQuery("");
+    setIsOpen(false);
+  }, [pathname, searchParams]);
+
+  // =========================
+  // Search Suggestions
+  // =========================
+
   const suggestions = useMemo(() => {
-    const keyword = searchQuery
-      .trim()
-      .toLowerCase();
+    const keyword =
+      debouncedQuery.trim().toLowerCase();
 
     if (!keyword) return [];
 
     return products
       .map((product) => {
-        const name =
-          product.name?.toLowerCase() || "";
+        let score = 0;
 
-        const category =
-          product.categorySlug?.toLowerCase() ||
-          product.categoryName?.toLowerCase() ||
+        const name =
+          product.name?.toLowerCase() ||
           "";
 
-        const categories =
-          product.categories
-            ?.map((cat) =>
-              cat.name.toLowerCase()
-            )
-            .join(" ") || "";
+        const category =
+          product.categoryName?.toLowerCase() ||
+          "";
 
         const colors =
           product.colors
@@ -84,7 +90,9 @@ useEffect(() => {
             ?.replace(/<[^>]*>/g, "")
             .toLowerCase() || "";
 
-        let score = 0;
+        // =====================
+        // Ranking
+        // =====================
 
         if (name.startsWith(keyword))
           score += 100;
@@ -92,20 +100,26 @@ useEffect(() => {
         if (isMatch(name, keyword))
           score += 80;
 
-        if (isMatch(categories, keyword))
+        if (
+          isMatch(category, keyword)
+        )
           score += 50;
 
-        if (isMatch(category, keyword))
-          score += 40;
-
-        if (isMatch(colors, keyword))
-          score += 30;
-
-        if (isMatch(ages, keyword))
+        if (
+          isMatch(colors, keyword)
+        )
           score += 30;
 
         if (
-          isMatch(description, keyword)
+          isMatch(ages, keyword)
+        )
+          score += 30;
+
+        if (
+          isMatch(
+            description,
+            keyword
+          )
         )
           score += 10;
 
@@ -119,7 +133,24 @@ useEffect(() => {
       )
       .sort((a, b) => b.score - a.score)
       .slice(0, 6);
-  }, [searchQuery, products]);
+  }, [debouncedQuery, products]);
+
+  // =========================
+  // Helpers
+  // =========================
+
+  const openSearch = () =>
+    setIsOpen(true);
+
+  const closeSearch = () => {
+    console.trace("CLOSE");
+    setIsOpen(false);
+    setSearchQuery("");
+  };
+
+  // =========================
+  // Context Value
+  // =========================
 
   const value = {
     products,
@@ -127,15 +158,22 @@ useEffect(() => {
     searchQuery,
     setSearchQuery,
 
+    debouncedQuery,
+
     isOpen,
+
+    openSearch,
+    closeSearch,
+
     setIsOpen,
 
     suggestions,
-    closeSearch,
   };
 
   return (
-    <SearchContext.Provider value={value}>
+    <SearchContext.Provider
+      value={value}
+    >
       {children}
     </SearchContext.Provider>
   );
@@ -147,7 +185,7 @@ export function useSearch() {
 
   if (!context) {
     throw new Error(
-      "useSearch must be used inside SearchProvider"
+      "useSearch must be used inside SearchProvider."
     );
   }
 

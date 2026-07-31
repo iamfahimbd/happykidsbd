@@ -1,49 +1,56 @@
 import Container from "@/components/ui/Container";
+
 import NavLogo from "./NavLogo";
-import NavSearch from "./NavSearch";
 import NavIcons from "./NavIcons";
 import MobileMenu from "./MobileMenu";
+
+import DesktopSearch from "./DesktopSearch";
 import MobileSearchOverlay from "./MobileSearchOverlay";
 
 export default function TopNavbar() {
   return (
-    <div className="relative border-b bg-white">
-      <Container>
-        <MobileSearchOverlay />
+    <>
+      <div className="relative border-b bg-white">
+        <Container>
+          {/* ================= Desktop ================= */}
 
-        {/* ================= Desktop ================= */}
-        <div className="hidden h-24 items-center gap-8 lg:flex">
-          {/* Logo */}
-          <NavLogo />
+          <div className="hidden h-24 items-center gap-8 lg:flex">
+            {/* Logo */}
 
-          {/* Search */}
-          <div className="flex-1">
-            <NavSearch />
+            <NavLogo />
+
+            {/* Search */}
+
+            <div className="flex-1">
+              <DesktopSearch />
+            </div>
+
+            {/* Icons */}
+
+            <NavIcons />
           </div>
 
-          {/* Icons */}
-          <NavIcons />
-        </div>
+          {/* ================= Mobile ================= */}
 
-        {/* ================= Mobile ================= */}
-        <div className="flex h-20 items-center justify-between lg:hidden">
-          {/* Hamburger */}
-          <MobileMenu />
+          <div className="flex h-20 items-center justify-between lg:hidden">
+            {/* Hamburger */}
 
-          {/* Logo */}
-          <NavLogo />
+            <MobileMenu />
 
-          {/* Cart */}
-          <NavIcons mobile />
-        </div>
+            {/* Logo */}
 
-        
+            <NavLogo />
 
-        {/* Mobile Search */}
-        {/* <div className="pb-4 lg:hidden">
-          <NavSearch />
-        </div> */}
-      </Container>
-    </div>
+            {/* Search + Cart */}
+
+            <NavIcons mobile />
+          </div>
+        </Container>
+      </div>
+
+      {/* Mobile Search Overlay */}
+
+      <MobileSearchOverlay />
+    </>
   );
 }

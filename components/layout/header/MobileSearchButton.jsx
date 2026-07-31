@@ -1,15 +1,17 @@
 "use client";
 
 import { FiSearch } from "react-icons/fi";
+
 import { useSearch } from "@/context/SearchContext";
 
 export default function MobileSearchButton() {
-  const { setIsOpen } = useSearch();
+  const { openSearch } = useSearch();
 
   return (
     <button
       type="button"
-      onClick={() => setIsOpen(true)}
+      onClick={openSearch}
+      aria-label="Open Search"
       className="
         flex
         h-11
@@ -19,12 +21,18 @@ export default function MobileSearchButton() {
 
         rounded-full
 
-        transition
-        hover:bg-gray-100
+        text-sky-600
+
+        transition-all
+        duration-200
+
+        hover:bg-sky-50
+        hover:text-pink-500
+
+        active:scale-95
       "
-      aria-label="Open Search"
     >
-      <FiSearch size={22} />
+      <FiSearch size={24} />
     </button>
   );
 }
