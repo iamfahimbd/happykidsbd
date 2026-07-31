@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FiShoppingCart, FiUser } from "react-icons/fi";
+import MobileSearchButton from "./MobileSearchButton";
 
 export default function NavIcons({ mobile = false }) {
   return (
@@ -13,6 +14,9 @@ export default function NavIcons({ mobile = false }) {
           <FiUser size={28} />
         </Link>
       )}
+
+      {/* Mobile Search  Icon */}
+      <MobileSearchButton />
 
       {/* Cart Icon */}
       <Link

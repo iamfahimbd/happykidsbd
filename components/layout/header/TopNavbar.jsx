@@ -1,13 +1,16 @@
-import Container from "../ui/Container";
+import Container from "@/components/ui/Container";
 import NavLogo from "./NavLogo";
 import NavSearch from "./NavSearch";
 import NavIcons from "./NavIcons";
 import MobileMenu from "./MobileMenu";
+import MobileSearchOverlay from "./MobileSearchOverlay";
 
 export default function TopNavbar() {
   return (
     <div className="relative border-b bg-white">
       <Container>
+        <MobileSearchOverlay />
+
         {/* ================= Desktop ================= */}
         <div className="hidden h-24 items-center gap-8 lg:flex">
           {/* Logo */}
@@ -34,10 +37,12 @@ export default function TopNavbar() {
           <NavIcons mobile />
         </div>
 
+        
+
         {/* Mobile Search */}
-        <div className="pb-4 lg:hidden">
+        {/* <div className="pb-4 lg:hidden">
           <NavSearch />
-        </div>
+        </div> */}
       </Container>
     </div>
   );

@@ -1,10 +1,10 @@
+import { getProducts } from "@/lib/woocommerce/products";
 import ProductSection from "@/components/product/ProductSection";
-import { products } from "@/data/products";
 
-export default function NewArrivals() {
-  const newArrivalProducts = products.filter(
-    (product) => product.isNew
-  );
+export default async function NewArrivals() {
+  const newArrivalProducts = await getProducts({
+    perPage: 8,
+  });
 
   return (
     <ProductSection

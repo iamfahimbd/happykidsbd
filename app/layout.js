@@ -1,5 +1,7 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/footer/Footer";
+import Navbar from "@/components/layout/header/Navbar";
+import { SearchProvider } from "@/context/SearchContext";
+import { getSearchProducts } from "@/lib/woocommerce/search";
 import { Hind_Siliguri, Nunito } from "next/font/google";
 import "./globals.css";
 
@@ -20,13 +22,20 @@ export const metadata = {
   description: "Colorful Styles, Joyful Smiles",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({
+  children,
+}) {
+  const searchProducts =
+    await getSearchProducts();
+
   return (
     <html lang="en">
       <body className={`${hind.variable} ${nunito.variable}`}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <SearchProvider products={searchProducts}>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </SearchProvider>
       </body>
     </html>
   );

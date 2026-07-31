@@ -85,3 +85,54 @@ button {
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
+
+mark {
+  background: #fef08a;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ---------------------------------------
+   Product Description
+---------------------------------------- */
+
+.product-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 18px;
+}
+
+.product-description table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-description th,
+.product-description td {
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+}
+
+.product-description ul {
+  padding-left: 20px;
+}
+
+.product-description iframe {
+  width: 100%;
+  border-radius: 18px;
+}
+
+.product-description p:last-child {
+  margin-bottom: 0;
+}

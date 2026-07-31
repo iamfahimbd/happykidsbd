@@ -2,6 +2,7 @@
 
 import ProductSection from "@/components/product/ProductSection";
 import { useShopFilter } from "@/context/ShopFilterContext";
+import NoProductsFound from "./NoProductsFound";
 
 export default function ShopProductSection({
   showHeader = false,
@@ -12,12 +13,18 @@ export default function ShopProductSection({
   const { filteredProducts } = useShopFilter();
 
   return (
+    <>
+  {filteredProducts.length === 0 ? (
+    <NoProductsFound />
+  ) : (
     <ProductSection
       products={filteredProducts}
-      showHeader={showHeader}
-      showButton={showButton}
-      noSection={noSection}
-      noContainer={noContainer}
+      showHeader={false}
+      showButton={false}
+      noSection
+      noContainer
     />
+  )}
+</>
   );
 }

@@ -10,18 +10,18 @@ export default function AgeFilter() {
     setSelectedAges,
   } = useShopFilter();
 
-  const handleAgeClick = (slug) => {
-    if (selectedAges.includes(slug)) {
-      setSelectedAges(
-        selectedAges.filter((age) => age !== slug)
-      );
-    } else {
-      setSelectedAges([
-        ...selectedAges,
-        slug,
-      ]);
-    }
-  };
+  const handleAgeClick = (name) => {
+  if (selectedAges.includes(name)) {
+    setSelectedAges(
+      selectedAges.filter((age) => age !== name)
+    );
+  } else {
+    setSelectedAges([
+      ...selectedAges,
+      name,
+    ]);
+  }
+};
 
   return (
     <FilterAccordion
@@ -30,14 +30,14 @@ export default function AgeFilter() {
     >
       <div className="grid grid-cols-2 gap-2">
         {ages.map((age) => {
-          const active = selectedAges.includes(age.slug);
+          const active = selectedAges.includes(age.name);
 
           return (
             <button
               key={age.id}
               type="button"
               onClick={() =>
-                handleAgeClick(age.slug)
+                handleAgeClick(age.name)
               }
               className={`
                 rounded-xl

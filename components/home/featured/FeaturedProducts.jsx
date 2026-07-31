@@ -1,8 +1,12 @@
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/woocommerce/products";
 import ProductSection from "@/components/product/ProductSection";
 
-export default function FeaturedProducts() {
-  const featuredProducts = products.filter((product) => product.featured);
+export default async function FeaturedProducts() {
+  // আপাতত latest 8 products আনছি
+  const featuredProducts = await getProducts({
+    perPage: 8,
+    featured: true,
+  });
 
   return (
     <ProductSection

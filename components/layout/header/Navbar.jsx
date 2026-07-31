@@ -1,4 +1,4 @@
-import TopNavbar from "@/components/layout/TopNavbar";
+import TopNavbar from "./TopNavbar";
 import BottomNavbar from "./BottomNavbar";
 
 export default function Navbar() {

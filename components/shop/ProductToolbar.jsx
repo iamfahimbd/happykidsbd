@@ -3,9 +3,16 @@
 import { useState } from "react";
 import FilterSidebar from "./FilterSidebar";
 import MobileFilterDrawer from "./MobileFilterDrawer";
+import { useShopFilter } from "@/context/ShopFilterContext";
 
 export default function ProductToolbar() {
   const [openFilter, setOpenFilter] = useState(false);
+  const {
+  sortBy,
+  setSortBy,
+  filteredCount,
+  totalProducts,
+} = useShopFilter();
 
   return (
     <div
@@ -32,12 +39,20 @@ export default function ProductToolbar() {
       {/* Left */}
 
       <p className="text-sm text-gray-500">
-        Showing
-        <span className="mx-1 font-semibold text-gray-900">1–12</span>
-        of
-        <span className="mx-1 font-semibold text-primary">84</span>
-        Products
-      </p>
+  Showing
+
+  <span className="mx-1 font-semibold text-primary">
+    {filteredCount}
+  </span>
+
+  of
+
+  <span className="mx-1 font-semibold text-gray-900">
+    {totalProducts}
+  </span>
+
+  Products
+</p>
 
       {/* Right */}
 
@@ -64,25 +79,37 @@ export default function ProductToolbar() {
         {/* Sort */}
 
         <select
-          className="
-            rounded-xl
-            border
-            border-gray-200
-            bg-white
-            px-4
-            py-2
-            text-sm
-            outline-none
-            transition
+  value={sortBy}
+  onChange={(e) => setSortBy(e.target.value)}
+  className="
+    rounded-xl
+    border
+    border-gray-200
+    bg-white
+    px-4
+    py-2
+    text-sm
+    outline-none
+    transition
+    focus:border-primary
+  "
+>
+  <option value="newest">
+    Newest
+  </option>
 
-            focus:border-primary
-          "
-        >
-          <option>Newest</option>
-          <option>Popular</option>
-          <option>Price: Low to High</option>
-          <option>Price: High to Low</option>
-        </select>
+  <option value="popular">
+    Popular
+  </option>
+
+  <option value="price-low">
+    Price: Low to High
+  </option>
+
+  <option value="price-high">
+    Price: High to Low
+  </option>
+</select>
       </div>
 
       <MobileFilterDrawer
