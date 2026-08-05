@@ -8,7 +8,7 @@ export default function ProductInfo({
   product,
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex min-w-0 flex-col">
       {/* Product Title */}
 
       <h1

@@ -1,19 +1,23 @@
-import { categories } from "@/data/categories";
+"use client";
+
 import FilterAccordion from "./FilterAccordion";
 import { useShopFilter } from "@/context/ShopFilterContext";
 
 export default function CategoryFilter({
-  
+  categories = [],
 }) {
-   const {
+  const {
     selectedCategories,
     setSelectedCategories,
   } = useShopFilter();
-  const handleCategoryChange = (slug) => {
-    if (selectedCategories.includes(slug)) {
+
+  function handleCategoryChange(slug) {
+    if (
+      selectedCategories.includes(slug)
+    ) {
       setSelectedCategories(
         selectedCategories.filter(
-          (category) => category !== slug
+          (item) => item !== slug
         )
       );
     } else {
@@ -22,12 +26,12 @@ export default function CategoryFilter({
         slug,
       ]);
     }
-  };
+  }
 
   return (
     <FilterAccordion
       title="Categories"
-      defaultOpen={true}
+      defaultOpen={false}
     >
       <div className="space-y-3">
         {categories.map((category) => (
@@ -41,9 +45,18 @@ export default function CategoryFilter({
                 category.slug
               )}
               onChange={() =>
-                handleCategoryChange(category.slug)
+                handleCategoryChange(
+                  category.slug
+                )
               }
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              className="
+                h-4
+                w-4
+                rounded
+                border-gray-300
+                text-primary
+                focus:ring-primary
+              "
             />
 
             <span className="text-sm text-gray-700">

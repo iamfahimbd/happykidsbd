@@ -3,98 +3,176 @@
 import FilterAccordion from "./FilterAccordion";
 import { useShopFilter } from "@/context/ShopFilterContext";
 
-const MIN = 0;
-const MAX = 5000;
-
 export default function PriceFilter() {
   const {
+    minPrice,
+    maxPrice,
     priceRange,
     setPriceRange,
   } = useShopFilter();
 
-  const minPrice = priceRange.min;
-  const maxPrice = priceRange.max;
+  const selectedMin = priceRange.min;
+  const selectedMax = priceRange.max;
 
   return (
-    <FilterAccordion title="Price" defaultOpen={false}>
-      <div className="space-y-5">
-        {/* Values */}
+    <FilterAccordion
+      title="Price"
+      defaultOpen={false}
+    >
+      <div className="space-y-6">
+        {/* Available */}
 
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 rounded-xl bg-gray-100 px-3 py-2 text-center">
-            <p className="text-xs text-gray-500">
-              Min
-            </p>
+        <div className="rounded-2xl bg-gray-50 p-4">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+            Available Range
+          </p>
 
-            <p className="font-semibold">
-              ৳{minPrice}
-            </p>
-          </div>
+          <div className="flex items-center justify-between text-lg font-bold">
+            <span>৳{minPrice}</span>
 
-          <div className="flex-1 rounded-xl bg-primary/10 px-3 py-2 text-center">
-            <p className="text-xs text-gray-500">
-              Max
-            </p>
+            <span className="text-gray-400">
+              —
+            </span>
 
-            <p className="font-semibold">
-              ৳{maxPrice}
-            </p>
+            <span>৳{maxPrice}</span>
           </div>
         </div>
 
-        {/* Min Slider */}
+        {/* Selected */}
 
-        <input
-          type="range"
-          min={MIN}
-          max={MAX}
-          step={100}
-          value={minPrice}
-          onChange={(e) =>
-            setPriceRange({
-              ...priceRange,
-              min: Math.min(
-                Number(e.target.value),
-                maxPrice - 100
-              ),
-            })
-          }
-          className="w-full cursor-pointer accent-primary"
-        />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-gray-500">
+              From
+            </label>
 
-        {/* Max Slider */}
+            <input
+              type="number"
+              value={selectedMin}
+              min={minPrice}
+              max={selectedMax}
+              onChange={(e) =>
+                setPriceRange({
+                  ...priceRange,
+                  min: Math.min(
+                    Number(e.target.value),
+                    selectedMax
+                  ),
+                })
+              }
+              className="
+                w-full
+                rounded-xl
+                border
+                border-gray-200
+                px-3
+                py-2
+                text-sm
+                outline-none
+                transition
+                focus:border-primary
+              "
+            />
+          </div>
 
-        <input
-          type="range"
-          min={MIN}
-          max={MAX}
-          step={100}
-          value={maxPrice}
-          onChange={(e) =>
-            setPriceRange({
-              ...priceRange,
-              max: Math.max(
-                Number(e.target.value),
-                minPrice + 100
-              ),
-            })
-          }
-          className="w-full cursor-pointer accent-secondary"
-        />
+          <div>
+            <label className="mb-1 block text-xs text-gray-500">
+              To
+            </label>
 
-        {/* Selected Range */}
+            <input
+              type="number"
+              value={selectedMax}
+              min={selectedMin}
+              max={maxPrice}
+              onChange={(e) =>
+                setPriceRange({
+                  ...priceRange,
+                  max: Math.max(
+                    Number(e.target.value),
+                    selectedMin
+                  ),
+                })
+              }
+              className="
+                w-full
+                rounded-xl
+                border
+                border-gray-200
+                px-3
+                py-2
+                text-sm
+                outline-none
+                transition
+                focus:border-primary
+              "
+            />
+          </div>
+        </div>
 
-        <div className="rounded-xl bg-slate-50 py-3 text-center text-sm">
-          Showing products from
+        {/* Slider */}
+
+        <div className="space-y-2">
+          <input
+            type="range"
+            min={minPrice}
+            max={maxPrice}
+            step={50}
+            value={selectedMin}
+            onChange={(e) =>
+              setPriceRange({
+                ...priceRange,
+                min: Math.min(
+                  Number(e.target.value),
+                  selectedMax
+                ),
+              })
+            }
+            className="w-full accent-primary"
+          />
+
+          <input
+            type="range"
+            min={minPrice}
+            max={maxPrice}
+            step={50}
+            value={selectedMax}
+            onChange={(e) =>
+              setPriceRange({
+                ...priceRange,
+                max: Math.max(
+                  Number(e.target.value),
+                  selectedMin
+                ),
+              })
+            }
+            className="w-full accent-secondary"
+          />
+        </div>
+
+        {/* Summary */}
+
+        <div
+          className="
+            rounded-2xl
+            border
+            border-primary/10
+            bg-primary/5
+            py-3
+            text-center
+            text-sm
+          "
+        >
+          Showing products between
 
           <span className="mx-1 font-semibold text-primary">
-            ৳{minPrice}
+            ৳{selectedMin}
           </span>
 
-          to
+          -
 
           <span className="ml-1 font-semibold text-secondary">
-            ৳{maxPrice}
+            ৳{selectedMax}
           </span>
         </div>
       </div>

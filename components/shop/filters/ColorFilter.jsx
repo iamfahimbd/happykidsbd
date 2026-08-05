@@ -1,16 +1,17 @@
 "use client";
 
-import { colors } from "@/data/colors";
-import FilterAccordion from "./FilterAccordion";
 import { useShopFilter } from "@/context/ShopFilterContext";
+import FilterAccordion from "./FilterAccordion";
 
-export default function ColorFilter() {
+export default function ColorFilter({
+  colors = [],
+}) {
   const {
     selectedColors,
     setSelectedColors,
   } = useShopFilter();
 
-  const handleColorClick = (slug) => {
+  function handleColorClick(slug) {
     if (selectedColors.includes(slug)) {
       setSelectedColors(
         selectedColors.filter(
@@ -23,66 +24,48 @@ export default function ColorFilter() {
         slug,
       ]);
     }
-  };
+  }
+
+  // WooCommerce-এ Color attribute না থাকলে
+  if (!colors.length) {
+    return null;
+  }
 
   return (
     <FilterAccordion
       title="Colors"
-      defaultOpen={true}
+      defaultOpen={false}
     >
       <div className="flex flex-wrap gap-3">
         {colors.map((color) => {
-          const active = selectedColors.includes(color.slug);
+          const active =
+            selectedColors.includes(color.slug);
 
           return (
             <button
               key={color.id}
               type="button"
-              onClick={() => handleColorClick(color.slug)}
-              title={color.name}
+              onClick={() =>
+                handleColorClick(color.slug)
+              }
               className={`
-                relative
-                flex
-                h-10
-                w-10
-                items-center
-                justify-center
                 rounded-full
+                border
+                px-4
+                py-2
+                text-sm
+                font-medium
                 transition-all
                 duration-200
 
                 ${
-                  color.border
-                    ? "border border-gray-300"
-                    : "border border-transparent"
-                }
-
-                ${
                   active
-                    ? "ring-2 ring-primary shadow-sm"
-                    : "hover:ring-1 hover:ring-primary/40"
+                    ? "border-primary bg-primary text-white shadow-sm"
+                    : "border-gray-300 bg-white text-gray-700 hover:border-primary hover:text-primary"
                 }
               `}
-              style={{
-                backgroundColor: color.hex,
-              }}
             >
-              {active && (
-                <span
-                  className={`
-                    text-xl
-                    font-black
-                    leading-none
-                    ${
-                      color.slug === "white"
-                        ? "text-black"
-                        : "text-white"
-                    }
-                  `}
-                >
-                  ✓
-                </span>
-              )}
+              {color.name}
             </button>
           );
         })}

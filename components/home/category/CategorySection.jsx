@@ -1,26 +1,27 @@
+import { getCategories } from "@/lib/woocommerce/categories";
+import CategoryCard from "./CategoryCard";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
-import CategoryCard from "./CategoryCard";
-import { categories } from "@/data/categories";
 
-export default function CategorySection() {
+export default async function CategorySection() {
+  const categories = await getCategories();
+
+  if (!categories.length) {
+    return null;
+  }
+
   return (
-    <Section className="relative">
+    <Section>
       <SectionTitle
-        subtitle="Browse Collection"
-        title="Shop By Category"
+        title="Shop by Category"
+        subtitle="Find the perfect outfit for every little one."
       />
 
       <div
         className="
           grid
-          grid-cols-2
+          grid-cols-3
           gap-4
-
-          sm:grid-cols-2
-          sm:gap-5
-
-          md:grid-cols-3
 
           lg:grid-cols-6
           lg:gap-6

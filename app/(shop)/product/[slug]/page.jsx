@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 
 import ProductLayout from "@/components/product-details/ProductLayout";
 
-import { getProductBySlug } from "@/lib/woocommerce/products";
+import {
+  getProductBySlug,
+  getRelatedProducts,
+} from "@/lib/woocommerce/products";
 
 export async function generateMetadata({
   params,
@@ -45,7 +48,17 @@ export default async function ProductPage({
     notFound();
   }
 
+  const relatedProducts =
+    await getRelatedProducts(
+      product.categoryId,
+      product.id,
+      4
+    );
+
   return (
-    <ProductLayout product={product} />
+    <ProductLayout
+      product={product}
+      relatedProducts={relatedProducts}
+    />
   );
 }

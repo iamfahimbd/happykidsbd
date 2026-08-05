@@ -15,7 +15,7 @@ export default function ProductGallery({
     useState(images[0]);
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       {/* Large Image */}
 
       <div
@@ -54,19 +54,20 @@ export default function ProductGallery({
       {/* Thumbnail Gallery */}
 
       <div
-        className="
-          mt-5
+  className="
+    mt-5
+    flex
+    w-full
+    gap-3
 
-          flex
+    overflow-x-auto
+    overflow-y-hidden
 
-          gap-3
+    pb-2
 
-          overflow-x-auto
-          no-scrollbar
-
-          pb-2
-        "
-      >
+    no-scrollbar
+  "
+>
         {images.map((image, index) => {
           const active =
             image === activeImage;

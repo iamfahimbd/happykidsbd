@@ -2,7 +2,7 @@ export default function ProductPrice({
   product,
 }) {
   return (
-    <div className="flex items-end gap-4">
+    <div className="flex items-end gap-4 ">
       {/* Current Price */}
 
       <span

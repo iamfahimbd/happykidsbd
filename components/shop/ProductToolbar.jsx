@@ -5,7 +5,11 @@ import FilterSidebar from "./FilterSidebar";
 import MobileFilterDrawer from "./MobileFilterDrawer";
 import { useShopFilter } from "@/context/ShopFilterContext";
 
-export default function ProductToolbar() {
+export default function ProductToolbar({
+  categories = [],
+  colors = [],
+  sizes = [],
+}) {
   const [openFilter, setOpenFilter] = useState(false);
   const {
   sortBy,
@@ -113,11 +117,16 @@ export default function ProductToolbar() {
       </div>
 
       <MobileFilterDrawer
-        open={openFilter}
-        onClose={() => setOpenFilter(false)}
-      >
-        <FilterSidebar mobile />
-      </MobileFilterDrawer>
+  open={openFilter}
+  onClose={() => setOpenFilter(false)}
+>
+  <FilterSidebar
+    mobile
+    categories={categories}
+    colors={colors}
+    sizes={sizes}
+  />
+</MobileFilterDrawer>
     </div>
   );
 }

@@ -1,61 +1,103 @@
+import Image from "next/image";
 import Link from "next/link";
 
-export default function CategoryCard({ category }) {
-  console.log(category);
-  const Icon = category.icon;
-
+export default function CategoryCard({
+  category,
+}) {
   return (
     <Link
       href={`/category/${category.slug}`}
       className="
         group
         block
-        rounded-[28px]
+
+        overflow-hidden
+
+        rounded-3xl
+
         border
-        border-white/60
+        border-gray-100
+
         bg-white
-        p-6
-        shadow-soft
+
+        shadow-sm
+
         transition-all
         duration-300
-        hover:-translate-y-2
-        hover:shadow-card
+
+        hover:-translate-y-1
+        hover:shadow-xl
       "
     >
-      <div
-        className={`
-          mx-auto
-          mb-5
-          flex
-          h-20
-          w-20
-          items-center
-          justify-center
-          rounded-3xl
-          ${category.bgColor}
-          transition-transform
-          duration-300
-          group-hover:scale-110
-          group-hover:rotate-6
-        `}
-      >
-        <Icon size={40} strokeWidth={2} className={category.iconColor} />
-        
-      </div>
+      {/* Category Image */}
 
-      <h3
+      <div
         className="
-          text-center
-          text-base
-          font-bold
-          text-gray-800
-          transition-colors
-          duration-300
-          group-hover:text-primary
+          relative
+
+          aspect-square
+
+          overflow-hidden
+
+          bg-gray-100
         "
       >
-        {category.name}
-      </h3>
+        <Image
+          src={
+            category.image ||
+            "/images/category-placeholder.webp"
+          }
+          alt={category.name}
+          fill
+          sizes="(max-width:768px) 33vw, 16vw"
+          className="
+            object-cover
+
+            transition-transform
+            duration-500
+
+            group-hover:scale-110
+          "
+        />
+      </div>
+
+      {/* Content */}
+
+      <div className="px-3 py-4 text-center">
+        <h3
+          className="
+            line-clamp-2
+
+            text-sm
+            font-semibold
+
+            text-gray-900
+
+            lg:text-base
+          "
+        >
+          {category.name}
+        </h3>
+
+        <span
+          className="
+            mt-2
+            inline-block
+
+            text-xs
+            font-medium
+
+            text-primary
+
+            transition-all
+            duration-300
+
+            group-hover:translate-x-1
+          "
+        >
+          Explore →
+        </span>
+      </div>
     </Link>
   );
 }

@@ -3,7 +3,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "happykidsbd.com",
+        hostname: "kidswearbd.com",
       },
     ],
   },

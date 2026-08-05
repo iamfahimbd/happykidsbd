@@ -3,6 +3,7 @@
 import ProductSection from "@/components/product/ProductSection";
 import { useShopFilter } from "@/context/ShopFilterContext";
 import NoProductsFound from "./NoProductsFound";
+import Pagination from "./Pagination";
 
 export default function ShopProductSection({
   showHeader = false,
@@ -10,21 +11,24 @@ export default function ShopProductSection({
   noSection = true,
   noContainer = true,
 }) {
-  const { filteredProducts } = useShopFilter();
+  const { paginatedProducts } = useShopFilter();
 
   return (
     <>
-  {filteredProducts.length === 0 ? (
+  {paginatedProducts.length === 0 ? (
     <NoProductsFound />
   ) : (
     <ProductSection
-      products={filteredProducts}
+      products={paginatedProducts}
       showHeader={false}
       showButton={false}
       noSection
       noContainer
     />
+    
   )}
+
+  <Pagination />
 </>
   );
 }

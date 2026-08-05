@@ -17,36 +17,43 @@ export default function useShopUrlSync({
   selectedColors,
   setSelectedColors,
 
+  selectedSizes,
+  setSelectedSizes,
+
   priceRange,
   setPriceRange,
 
   sortBy,
   setSortBy,
 
-  searchQuery,
-  setSearchQuery,
+  currentPage,
+  setCurrentPage,
+
+  minPrice,
+  maxPrice,
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // ==========================
   // URL -> Context
+  // ==========================
 
   useEffect(() => {
-    const category =
-      searchParams.get("category");
+    const category = searchParams.get("category");
 
-    const age =
-      searchParams.get("age");
+    const age = searchParams.get("age");
 
-    const color =
-      searchParams.get("color");
+    const color = searchParams.get("color");
 
-    const price =
-      searchParams.get("price");
+    const size = searchParams.get("size");
 
-    const sort =
-      searchParams.get("sort");
+    const price = searchParams.get("price");
+
+    const sort = searchParams.get("sort");
+
+    const page = searchParams.get("page");
 
     setSelectedCategories(
       category ? category.split(",") : []
@@ -60,6 +67,10 @@ export default function useShopUrlSync({
       color ? color.split(",") : []
     );
 
+    setSelectedSizes(
+      size ? size.split(",") : []
+    );
+
     if (price) {
       const [min, max] = price.split("-");
 
@@ -69,22 +80,36 @@ export default function useShopUrlSync({
       });
     } else {
       setPriceRange({
-        min: 0,
-        max: 5000,
+        min: minPrice,
+        max: maxPrice,
       });
     }
 
     setSortBy(sort || "newest");
+
+    setCurrentPage(
+      page ? Number(page) : 1
+    );
   }, [
     searchParams,
-  setSelectedCategories,
-  setSelectedAges,
-  setSelectedColors,
-  setPriceRange,
-  setSortBy,
+    minPrice,
+    maxPrice,
+
+    setSelectedCategories,
+    setSelectedAges,
+    setSelectedColors,
+    setSelectedSizes,
+
+    setPriceRange,
+
+    setSortBy,
+
+    setCurrentPage,
   ]);
 
+  // ==========================
   // Context -> URL
+  // ==========================
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -110,9 +135,16 @@ export default function useShopUrlSync({
       );
     }
 
+    if (selectedSizes.length) {
+      params.set(
+        "size",
+        selectedSizes.join(",")
+      );
+    }
+
     if (
-      priceRange.min !== 0 ||
-      priceRange.max !== 5000
+      priceRange.min !== minPrice ||
+      priceRange.max !== maxPrice
     ) {
       params.set(
         "price",
@@ -122,6 +154,13 @@ export default function useShopUrlSync({
 
     if (sortBy !== "newest") {
       params.set("sort", sortBy);
+    }
+
+    if (currentPage > 1) {
+      params.set(
+        "page",
+        currentPage.toString()
+      );
     }
 
     const query = params.toString();
@@ -138,9 +177,18 @@ export default function useShopUrlSync({
     selectedCategories,
     selectedAges,
     selectedColors,
+    selectedSizes,
+
     priceRange,
+
     sortBy,
+
+    currentPage,
+
     pathname,
     router,
+
+    minPrice,
+    maxPrice,
   ]);
 }

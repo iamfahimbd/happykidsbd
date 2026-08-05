@@ -2,13 +2,17 @@
 
 import { useShopFilter } from "@/context/ShopFilterContext";
 
-import AgeFilter from "./filters/AgeFilter";
 import CategoryFilter from "./filters/CategoryFilter";
 import ColorFilter from "./filters/ColorFilter";
 import PriceFilter from "./filters/PriceFilter";
+import SizeFilter from "./filters/SizeFilter";
 
 export default function FilterSidebar({
   mobile = false,
+  categories = [],
+  ages = [],
+  colors = [],
+  sizes = [],
 }) {
   const { clearFilters } = useShopFilter();
 
@@ -16,7 +20,7 @@ export default function FilterSidebar({
     <div
       className={
         mobile
-          ? ""
+          ? "h-full"
           : `
               rounded-3xl
               border
@@ -29,22 +33,48 @@ export default function FilterSidebar({
     >
       {/* Header */}
 
-      <div className="mb-1 flex items-center justify-between">
-        <h2 className="ml-5 mt-2 text-2xl font-bold">
+      <div className="hidden lg:flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h2 className="text-2xl font-bold">
           Filters
         </h2>
       </div>
 
       {/* Body */}
 
-      <div className="space-y-8 p-3">
-        <CategoryFilter />
+      <div
+        className={`
+          custom-scrollbar
+
+          space-y-8
+          px-5
+          py-4
+
+          ${
+            mobile
+              ? ""
+              : "lg:max-h-[calc(100vh-180px)] lg:overflow-y-auto"
+          }
+        `}
+      >
+        {/* Size */}
+
+        <SizeFilter sizes={sizes} />
+
+        {/* Categories */}
+
+        <CategoryFilter
+          categories={categories}
+        />
+
+        {/* Price */}
 
         <PriceFilter />
 
-        <AgeFilter />
+        {/* Colors */}
 
-        <ColorFilter />
+        <ColorFilter colors={colors} />
+
+        {/* Clear */}
 
         <div className="mt-5 flex justify-end">
           <button

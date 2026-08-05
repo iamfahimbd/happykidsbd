@@ -38,7 +38,7 @@ export default function ShopLayout({ sidebar, toolbar, children }) {
           {/* Desktop Sidebar */}
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24">{sidebar}</div>
+            <div className="sticky top-[160px]">{sidebar}</div>
           </aside>
 
           {/* Products */}

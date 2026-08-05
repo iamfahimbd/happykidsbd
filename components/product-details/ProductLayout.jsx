@@ -5,43 +5,52 @@ import RelatedProducts from "./RelatedProducts";
 
 export default function ProductLayout({
   product,
+  relatedProducts,
 }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
+    <div
+  className="
+    mx-auto
+    w-full
+    max-w-7xl
+    overflow-x-hidden
+
+    px-4
+    py-8
+
+    lg:px-8
+    lg:py-12
+  "
+>
       {/* Top */}
 
       <div
-        className="
-          grid
-          gap-10
+  className="
+    grid
+    min-w-0
+    gap-10
 
-          lg:grid-cols-2
-          lg:gap-16
-          lg:items-start
-        "
-      >
-        <ProductGallery
-          product={product}
-        />
+    lg:grid-cols-2
+    lg:gap-16
+    lg:items-start
+  "
+>
+        <ProductGallery product={product} />
 
-        <ProductInfo
-          product={product}
-        />
+        <ProductInfo product={product} />
       </div>
 
       {/* Description */}
 
       <div className="mt-16 lg:mt-24">
-        <ProductDescription
-          product={product}
-        />
+        <ProductDescription product={product} />
       </div>
 
       {/* Related */}
 
       <div className="mt-16 lg:mt-24">
         <RelatedProducts
-          product={product}
+          products={relatedProducts}
         />
       </div>
     </div>
