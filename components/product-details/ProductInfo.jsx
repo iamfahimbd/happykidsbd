@@ -1,12 +1,17 @@
-import ProductPrice from "./ProductPrice";
-import ProductVariants from "./ProductVariants";
-import ProductQuantity from "./ProductQuantity";
-import BuyNowButton from "./BuyNowButton";
-import AddToCartButton from "./AddToCartButton";
+"use client";
 
-export default function ProductInfo({
-  product,
-}) {
+import { useState } from "react";
+import AddToCartButton from "./AddToCartButton";
+import BuyNowButton from "./BuyNowButton";
+import ProductPrice from "./ProductPrice";
+import ProductQuantity from "./ProductQuantity";
+import ProductVariants from "./ProductVariants";
+
+export default function ProductInfo({ product }) {
+  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "");
+
+  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "");
+
   return (
     <div className="flex min-w-0 flex-col">
       {/* Product Title */}
@@ -53,8 +58,7 @@ export default function ProductInfo({
             text-gray-600
           "
           dangerouslySetInnerHTML={{
-            __html:
-              product.shortDescription,
+            __html: product.shortDescription,
           }}
         />
       )}
@@ -64,6 +68,10 @@ export default function ProductInfo({
       <div className="mt-8">
         <ProductVariants
           product={product}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
         />
       </div>
 
@@ -89,12 +97,16 @@ export default function ProductInfo({
         <div className="flex-1">
           <BuyNowButton
             product={product}
+            selectedSize={selectedSize}
+            selectedColor={selectedColor}
           />
         </div>
 
         <div className="flex-1">
           <AddToCartButton
             product={product}
+            selectedSize={selectedSize}
+            selectedColor={selectedColor}
           />
         </div>
       </div>

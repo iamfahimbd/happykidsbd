@@ -1,16 +1,51 @@
 "use client";
 
+import { useCart } from "@/context/CartContext";
+
 export default function AddToCartButton({
   product,
+  selectedSize = "",
+  selectedColor = "",
+  quantity = 1,
 }) {
+  const {
+    addItem,
+    openCart,
+  } = useCart();
+
   const handleAddToCart = () => {
+    const item = {
+      id: product.id,
+
+      slug: product.slug,
+
+      name: product.name,
+
+      image: product.image,
+
+      price: product.price,
+
+      quantity,
+
+      size: selectedSize,
+
+      color: selectedColor,
+    };
+
     console.log(
-      "Add To Cart:",
-      product.id
+      "Adding item:",
+      item
     );
 
-    // TODO:
-    // Add to cart logic
+    // Add product to cart
+    addItem(item);
+
+    // Open cart drawer
+    openCart();
+
+    console.log(
+      "Added To Cart"
+    );
   };
 
   return (
@@ -24,6 +59,8 @@ export default function AddToCartButton({
         h-14
         w-full
 
+        min-w-0
+
         items-center
         justify-center
 
@@ -35,7 +72,8 @@ export default function AddToCartButton({
         bg-white/80
         backdrop-blur-xl
 
-        px-6
+        px-4
+        sm:px-6
 
         font-semibold
         text-primary

@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
 
-export default function ProductVariants({ product }) {
+export default function ProductVariants({
+   product,
+  selectedSize,
+  setSelectedSize,
+  selectedColor,
+  setSelectedColor,
+}) {
   console.log({
     ages: product.ages,
     colors: product.colors,
@@ -10,9 +15,7 @@ export default function ProductVariants({ product }) {
     attributes: product.attributes,
   });
 
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "");
-
-  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "");
+  
 
   return (
     <div className="space-y-5">

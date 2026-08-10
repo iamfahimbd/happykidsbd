@@ -1,8 +1,17 @@
 import Footer from "@/components/layout/footer/Footer";
 import Navbar from "@/components/layout/header/Navbar";
+import CartDrawer from "@/components/cart/CartDrawer";
+
+import { CartProvider } from "@/context/CartContext";
 import { SearchProvider } from "@/context/SearchContext";
+
 import { getSearchProducts } from "@/lib/woocommerce/search";
-import { Hind_Siliguri, Nunito } from "next/font/google";
+
+import {
+  Hind_Siliguri,
+  Nunito,
+} from "next/font/google";
+
 import "./globals.css";
 
 const hind = Hind_Siliguri({
@@ -13,13 +22,20 @@ const hind = Hind_Siliguri({
 
 const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: [
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+  ],
   variable: "--font-nunito",
 });
 
 export const metadata = {
   title: "HappyKidsBD",
-  description: "Colorful Styles, Joyful Smiles",
+  description:
+    "Colorful Styles, Joyful Smiles",
 };
 
 export default async function RootLayout({
@@ -30,12 +46,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${hind.variable} ${nunito.variable}`}>
-        <SearchProvider products={searchProducts}>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </SearchProvider>
+      <body
+        className={`${hind.variable} ${nunito.variable}`}
+      >
+        <CartProvider>
+          <SearchProvider>
+            <Navbar />
+
+            <main>
+              {children}
+            </main>
+
+            <CartDrawer />
+
+            <Footer />
+          </SearchProvider>
+        </CartProvider>
       </body>
     </html>
   );
