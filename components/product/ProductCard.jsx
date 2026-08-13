@@ -1,8 +1,36 @@
+"use client";
+
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useCart } from "@/context/CartContext";
+
 export default function ProductCard({ product }) {
+  const { addItem, openCart } = useCart();
+
+  const handleAddToCart = () => {
+    const item = {
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: 1,
+
+      // Product Card থেকে variant select করা হচ্ছে না
+      size: "",
+      color: "",
+    };
+
+    console.log("PRODUCT CARD - Adding item:", item);
+
+    addItem(item);
+    openCart();
+
+    console.log("PRODUCT CARD - Added To Cart");
+  };
+
   return (
     <div
       className="
@@ -19,7 +47,9 @@ export default function ProductCard({ product }) {
         hover:shadow-xl
       "
     >
-      {/* Image */}
+      {/* =========================
+          Product Image
+      ========================== */}
 
       <div className="relative overflow-hidden">
         {/* Badge */}
@@ -47,6 +77,8 @@ export default function ProductCard({ product }) {
         {/* Wishlist */}
 
         <button
+          type="button"
+          aria-label="Add to wishlist"
           className="
             absolute
             right-4
@@ -88,17 +120,25 @@ export default function ProductCard({ product }) {
         </Link>
       </div>
 
-      {/* Content */}
+      {/* =========================
+          Product Content
+      ========================== */}
 
       <div className="space-y-4 p-3 md:p-4">
         {/* Rating */}
 
-        <div className="flex items-center gap-2  ">
-          <Star size={16} className="fill-yellow-400 text-yellow-400 " />
+        <div className="flex items-center gap-2">
+          <Star
+            size={16}
+            className="fill-yellow-400 text-yellow-400"
+          />
 
           <span className="text-sm text-gray-600">
             {product.rating}
-            <span className="ml-1 text-gray-400">({product.reviews})</span>
+
+            <span className="ml-1 text-gray-400">
+              ({product.reviews})
+            </span>
           </span>
         </div>
 
@@ -109,12 +149,11 @@ export default function ProductCard({ product }) {
           className="
             line-clamp-2
             text-sm
-            md:text-lg
             font-semibold
-            
             text-gray-900
             transition-colors
             hover:text-primary
+            md:text-lg
           "
         >
           {product.name}
@@ -123,20 +162,38 @@ export default function ProductCard({ product }) {
         {/* Price */}
 
         <div className="flex items-center gap-3">
-          <span className="text-base font-bold md:text-xl text-primary">
+          <span
+            className="
+              text-base
+              font-bold
+              text-primary
+              md:text-xl
+            "
+          >
             ৳{product.price}
           </span>
 
           {product.oldPrice && (
-            <span className="text-xs md:text-base text-red-500 line-through">
+            <span
+              className="
+                text-xs
+                text-red-500
+                line-through
+                md:text-base
+              "
+            >
               ৳{product.oldPrice}
             </span>
           )}
         </div>
 
-        {/* Button */}
+        {/* =========================
+            Add To Cart
+        ========================== */}
 
         <button
+          type="button"
+          onClick={handleAddToCart}
           className="
             flex
             w-full
@@ -147,16 +204,18 @@ export default function ProductCard({ product }) {
             bg-primary
             py-2
             text-sm
-            md:py-3
-            md:text-base
             font-medium
             text-white
             transition-all
             duration-300
             hover:opacity-90
+            active:scale-[0.98]
+            md:py-3
+            md:text-base
           "
         >
           <ShoppingCart size={18} />
+
           Add to Cart
         </button>
       </div>

@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/footer/Footer";
 import Navbar from "@/components/layout/header/Navbar";
+
 import CartDrawer from "@/components/cart/CartDrawer";
 
 import { CartProvider } from "@/context/CartContext";
@@ -34,8 +35,7 @@ const nunito = Nunito({
 
 export const metadata = {
   title: "HappyKidsBD",
-  description:
-    "Colorful Styles, Joyful Smiles",
+  description: "Colorful Styles, Joyful Smiles",
 };
 
 export default async function RootLayout({
@@ -49,19 +49,19 @@ export default async function RootLayout({
       <body
         className={`${hind.variable} ${nunito.variable}`}
       >
-        <CartProvider>
-          <SearchProvider>
+        <SearchProvider products={searchProducts}>
+          <CartProvider>
             <Navbar />
 
             <main>
               {children}
             </main>
 
-            <CartDrawer />
-
             <Footer />
-          </SearchProvider>
-        </CartProvider>
+
+            <CartDrawer />
+          </CartProvider>
+        </SearchProvider>
       </body>
     </html>
   );

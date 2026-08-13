@@ -2,12 +2,27 @@ import Link from "next/link";
 import Container from "../../ui/Container";
 
 const menus = [
-  "Home",
-  "Shop",
-  "Baby Girls",
-  "Baby Boys",
-  "New Arrival",
-  "Sale",
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Shop",
+    href: "/shop",
+  },
+  {
+    label: "Winter Collections",
+    href: "/category/winter-collections",
+  },
+  {
+    label: "Summer Collections",
+    href: "/category/summer-collections",
+  },
+  {
+    label: "New Arrival",
+    href: "/category/new-arrivals",
+  },
+  
 ];
 
 export default function BottomNavbar() {
@@ -16,8 +31,12 @@ export default function BottomNavbar() {
       <Container>
         <nav className="hidden lg:flex justify-center items-center gap-12 h-14">
           {menus.map((menu) => (
-            <Link key={menu} href="/" className="text-lg font-semibold">
-              {menu}
+            <Link
+              key={menu.label}
+              href={menu.href}
+              className="text-lg font-semibold"
+            >
+              {menu.label}
             </Link>
           ))}
         </nav>

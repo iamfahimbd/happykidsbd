@@ -5,7 +5,7 @@ export default function NavLogo() {
   return (
     <Link href="/" className="flex items-center gap-3">
       <Image
-        src="/logo/logo.png"
+        src="/images/logo/logo.png"
         width={80}
         height={80}
         alt="HappyKidsBD"

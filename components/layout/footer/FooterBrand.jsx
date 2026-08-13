@@ -10,10 +10,10 @@ export default function FooterBrand() {
 
       <Link href="/" className="inline-block">
         <Image
-          src="/images/logo.png"
+          src="/images/logo/logo.png"
           alt="HappyKidsBD"
-          width={190}
-          height={60}
+          width={50}
+          height={50}
           className="h-auto w-auto"
         />
       </Link>

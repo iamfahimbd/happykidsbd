@@ -3,7 +3,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "kidswearbd.com",
+        hostname: "happykidsbd.com",
+        pathname: "/wp-content/uploads/**",
       },
     ],
   },

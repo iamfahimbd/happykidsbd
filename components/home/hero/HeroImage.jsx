@@ -12,7 +12,7 @@ export default function HeroImage() {
       <div className="relative z-10">
 
         <Image
-          src="/images/hero-kids.png"
+          src="/images/hero/hero-kids.png"
           alt="Happy Kids"
           width={550}
           height={650}
