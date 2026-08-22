@@ -2,6 +2,26 @@
 
 import { useCart } from "@/context/CartContext";
 
+// ==========================
+// Normalize Variant Value
+// ==========================
+
+const getVariantValue = (item) => {
+  if (!item) {
+    return "";
+  }
+
+  if (typeof item === "string") {
+    return item;
+  }
+
+  return (
+    item?.slug ||
+    item?.name ||
+    ""
+  );
+};
+
 export default function AddToCartButton({
   product,
   selectedSize = "",
@@ -14,6 +34,20 @@ export default function AddToCartButton({
   } = useCart();
 
   const handleAddToCart = () => {
+    // ==========================
+    // Normalize Variants
+    // ==========================
+
+    const size =
+      getVariantValue(selectedSize);
+
+    const color =
+      getVariantValue(selectedColor);
+
+    // ==========================
+    // Cart Item
+    // ==========================
+
     const item = {
       id: product.id,
 
@@ -23,29 +57,33 @@ export default function AddToCartButton({
 
       image: product.image,
 
-      price: product.price,
+      price:
+        Number(product.price) || 0,
 
-      quantity,
+      quantity:
+        Number(quantity) || 1,
 
-      size: selectedSize,
+      size,
 
-      color: selectedColor,
+      color,
     };
 
     console.log(
-      "Adding item:",
+      "ADD TO CART - Item:",
       item
     );
 
-    // Add product to cart
+    // ==========================
+    // Add To Cart
+    // ==========================
+
     addItem(item);
 
-    // Open cart drawer
-    openCart();
+    // ==========================
+    // Open Cart Drawer
+    // ==========================
 
-    console.log(
-      "Added To Cart"
-    );
+    openCart();
   };
 
   return (

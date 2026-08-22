@@ -9,6 +9,33 @@ import {
 
 const CartContext = createContext(null);
 
+// ==========================
+// Variant Value Normalizer
+// ==========================
+
+function normalizeVariant(value) {
+  if (!value) return "";
+
+  if (typeof value === "object") {
+    return String(
+      value.slug ||
+        value.name ||
+        value.value ||
+        ""
+    )
+      .toLowerCase()
+      .trim();
+  }
+
+  return String(value)
+    .toLowerCase()
+    .trim();
+}
+
+// ==========================
+// Cart Provider
+// ==========================
+
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
@@ -87,32 +114,48 @@ export function CartProvider({ children }) {
       product
     );
 
+    const productSize =
+      normalizeVariant(product.size);
+
+    const productColor =
+      normalizeVariant(product.color);
+
     setCartItems((prev) => {
       const existingItem =
-        prev.find(
-          (item) =>
+        prev.find((item) => {
+          return (
             item.id === product.id &&
-            item.size === product.size &&
-            item.color === product.color
-        );
+            normalizeVariant(item.size) ===
+              productSize &&
+            normalizeVariant(item.color) ===
+              productColor
+          );
+        });
 
       // ==========================
       // Existing Product + Variant
       // ==========================
 
       if (existingItem) {
-        return prev.map((item) =>
-          item.id === product.id &&
-          item.size === product.size &&
-          item.color === product.color
-            ? {
-                ...item,
-                quantity:
-                  Number(item.quantity || 0) +
-                  Number(product.quantity || 1),
-              }
-            : item
-        );
+        return prev.map((item) => {
+          const sameVariant =
+            item.id === product.id &&
+            normalizeVariant(item.size) ===
+              productSize &&
+            normalizeVariant(item.color) ===
+              productColor;
+
+          if (!sameVariant) {
+            return item;
+          }
+
+          return {
+            ...item,
+            quantity:
+              Number(item.quantity || 0) +
+              Number(product.quantity || 1),
+          };
+        });
       }
 
       // ==========================
@@ -123,13 +166,17 @@ export function CartProvider({ children }) {
         ...prev,
         {
           ...product,
+
           quantity:
             Number(product.quantity) || 1,
         },
       ];
     });
 
-    // Open drawer after adding
+    // ==========================
+    // Open Drawer
+    // ==========================
+
     openCart();
   };
 
@@ -142,15 +189,23 @@ export function CartProvider({ children }) {
     size,
     color
   ) => {
+    const normalizedSize =
+      normalizeVariant(size);
+
+    const normalizedColor =
+      normalizeVariant(color);
+
     setCartItems((prev) =>
-      prev.filter(
-        (item) =>
-          !(
-            item.id === id &&
-            item.size === size &&
-            item.color === color
-          )
-      )
+      prev.filter((item) => {
+        const sameVariant =
+          item.id === id &&
+          normalizeVariant(item.size) ===
+            normalizedSize &&
+          normalizeVariant(item.color) ===
+            normalizedColor;
+
+        return !sameVariant;
+      })
     );
   };
 
@@ -174,17 +229,30 @@ export function CartProvider({ children }) {
       return;
     }
 
+    const normalizedSize =
+      normalizeVariant(size);
+
+    const normalizedColor =
+      normalizeVariant(color);
+
     setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id &&
-        item.size === size &&
-        item.color === color
-          ? {
-              ...item,
-              quantity: newQuantity,
-            }
-          : item
-      )
+      prev.map((item) => {
+        const sameVariant =
+          item.id === id &&
+          normalizeVariant(item.size) ===
+            normalizedSize &&
+          normalizeVariant(item.color) ===
+            normalizedColor;
+
+        if (!sameVariant) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: newQuantity,
+        };
+      })
     );
   };
 
@@ -197,7 +265,7 @@ export function CartProvider({ children }) {
   };
 
   // ==========================
-  // Totals
+  // Total Items
   // ==========================
 
   const totalItems =
@@ -207,6 +275,10 @@ export function CartProvider({ children }) {
         Number(item.quantity || 0),
       0
     );
+
+  // ==========================
+  // Subtotal
+  // ==========================
 
   const subtotal =
     cartItems.reduce(

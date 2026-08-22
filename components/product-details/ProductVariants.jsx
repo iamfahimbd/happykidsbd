@@ -1,88 +1,139 @@
 "use client";
 
-
 export default function ProductVariants({
-   product,
+  product,
   selectedSize,
   setSelectedSize,
   selectedColor,
   setSelectedColor,
 }) {
-  console.log({
-    ages: product.ages,
-    colors: product.colors,
-    sizes: product.sizes,
-    attributes: product.attributes,
-  });
+  // ==========================
+  // Safe Variants
+  // ==========================
 
-  
+  const sizes = Array.isArray(product?.sizes)
+    ? product.sizes
+    : [];
+
+  const colors = Array.isArray(product?.colors)
+    ? product.colors
+    : [];
+
+  // ==========================
+  // Get Variant Value
+  // ==========================
+
+  const getValue = (item) => {
+    if (typeof item === "string") {
+      return item;
+    }
+
+    return (
+      item?.slug ||
+      item?.name ||
+      ""
+    );
+  };
+
+  // ==========================
+  // Get Display Name
+  // ==========================
+
+  const getDisplayName = (item) => {
+    if (typeof item === "string") {
+      return item.replace(/-/g, " ");
+    }
+
+    return (
+      item?.name ||
+      item?.slug?.replace(/-/g, " ") ||
+      ""
+    );
+  };
 
   return (
     <div className="space-y-5">
-      {/* Age */}
-      <h3
-            className="
-        
 
+      {/* ==========================
+          Size
+      ========================== */}
+
+      {sizes.length > 0 && (
+        <div>
+          <h3
+            className="
+              mb-3
               text-sm
               font-semibold
-              py-0
-
               uppercase
               tracking-wide
-
               text-gray-700
             "
           >
             Select Age
           </h3>
-      {product.sizes.map((size) => {
-        const active = selectedSize === size;
 
-        return (
-          <>
-          
-            <button
-              key={size}
-              type="button"
-              onClick={() => setSelectedSize(size)}
-              className={`
-        rounded-2xl
-        border
-        px-5
-        py-2.5
-        text-sm
-        font-semibold
-        transition-all
-        duration-200
+          <div className="flex flex-wrap gap-3">
+            {sizes.map((size, index) => {
+              const value = getValue(size);
 
-        ${
-          active
-            ? "border-primary bg-primary text-white shadow-lg"
-            : "border-gray-200 bg-white text-gray-700 hover:border-primary hover:text-primary"
-        }
-      `}
-            >
-              {size.replace(/-/g, " ")}
-            </button>
-          </>
-        );
-      })}
+              const displayName =
+                getDisplayName(size);
 
-      {/* Color */}
+              const active =
+                selectedSize === value;
 
-      {product.colors?.length > 0 && (
+              return (
+                <button
+                  key={
+                    typeof size === "object"
+                      ? size?.id ||
+                        size?.slug ||
+                        index
+                      : size
+                  }
+                  type="button"
+                  onClick={() =>
+                    setSelectedSize(value)
+                  }
+                  className={`
+                    rounded-2xl
+                    border
+                    px-5
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    transition-all
+                    duration-200
+
+                    ${
+                      active
+                        ? "border-primary bg-primary text-white shadow-lg"
+                        : "border-gray-200 bg-white text-gray-700 hover:border-primary hover:text-primary"
+                    }
+                  `}
+                >
+                  {displayName}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ==========================
+          Color
+      ========================== */}
+
+      {colors.length > 0 && (
         <div>
           <h3
             className="
               mb-3
-
               text-sm
               font-semibold
-
               uppercase
               tracking-wide
-
               text-gray-700
             "
           >
@@ -90,36 +141,46 @@ export default function ProductVariants({
           </h3>
 
           <div className="flex flex-wrap gap-3">
-            {product.colors.map((color) => {
-              const active = selectedColor === color;
+            {colors.map((color, index) => {
+              const value = getValue(color);
+
+              const displayName =
+                getDisplayName(color);
+
+              const active =
+                selectedColor === value;
 
               return (
                 <button
-                  key={color}
+                  key={
+                    typeof color === "object"
+                      ? color?.id ||
+                        color?.slug ||
+                        index
+                      : color
+                  }
                   type="button"
-                  onClick={() => setSelectedColor(color)}
+                  onClick={() =>
+                    setSelectedColor(value)
+                  }
                   className={`
-                      rounded-2xl
+                    rounded-2xl
+                    border
+                    px-5
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    transition-all
+                    duration-200
 
-                      border
-
-                      px-5
-                      py-2.5
-
-                      text-sm
-                      font-semibold
-
-                      transition-all
-                      duration-200
-
-                      ${
-                        active
-                          ? "border-primary bg-primary text-white shadow-lg"
-                          : "border-gray-200 bg-white text-gray-700 hover:border-primary hover:text-primary"
-                      }
-                    `}
+                    ${
+                      active
+                        ? "border-primary bg-primary text-white shadow-lg"
+                        : "border-gray-200 bg-white text-gray-700 hover:border-primary hover:text-primary"
+                    }
+                  `}
                 >
-                  {color}
+                  {displayName}
                 </button>
               );
             })}

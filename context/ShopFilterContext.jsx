@@ -1,31 +1,67 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import useShopUrlSync from "@/hooks/useShopUrlSync";
 
 const ShopFilterContext = createContext(null);
 
 export function ShopFilterProvider({
-  products,
-  minPrice,
-  maxPrice,
+  products = [],
+  minPrice = 0,
+  maxPrice = 0,
   initialPage = 1,
+
+  // WooCommerce pagination
+  totalProducts = 0,
+  totalPages = 0,
+
   children,
 }) {
+  // ==========================
+  // Safe Products
+  // ==========================
+
+  const safeProducts = Array.isArray(products)
+    ? products
+    : [];
+
+  // ==========================
   // Categories
+  // ==========================
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] =
+    useState([]);
 
+  // ==========================
   // Ages
+  // ==========================
 
-  const [selectedAges, setSelectedAges] = useState([]);
+  const [selectedAges, setSelectedAges] =
+    useState([]);
 
+  // ==========================
   // Colors
+  // ==========================
 
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColors, setSelectedColors] =
+    useState([]);
 
+  // ==========================
+  // Sizes
+  // ==========================
+
+  const [selectedSizes, setSelectedSizes] =
+    useState([]);
+
+  // ==========================
   // Price
+  // ==========================
 
   const [priceRange, setPriceRange] = useState({
     min: minPrice,
@@ -39,36 +75,36 @@ export function ShopFilterProvider({
     });
   }, [minPrice, maxPrice]);
 
-  // Sizes
-  const [selectedSizes, setSelectedSizes] = useState([]);
-
+  // ==========================
   // Sort
+  // ==========================
 
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] =
+    useState("newest");
 
+  // ==========================
   // Search
+  // ==========================
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] =
+    useState("");
 
-  // Pagination
+  // ==========================
+  // Current Page
+  // ==========================
 
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentPage, setCurrentPage] =
+    useState(initialPage);
+
+  // ==========================
+  // Products Per Page
+  // ==========================
 
   const productsPerPage = 20;
 
-  /* useEffect(() => {
-  setCurrentPage(1);
-}, [
-  selectedCategories,
-  selectedAges,
-  selectedColors,
-  selectedSizes,
-  priceRange,
-  searchQuery,
-  sortBy,
-]); */
-
+  // ==========================
   // URL Sync
+  // ==========================
 
   useShopUrlSync({
     selectedCategories,
@@ -94,125 +130,62 @@ export function ShopFilterProvider({
 
     currentPage,
     setCurrentPage,
+
     minPrice,
     maxPrice,
   });
 
-  // Filtering
+  // ==========================
+  // Server-side Filtering
+  // ==========================
+  //
+  // IMPORTANT:
+  //
+  // Product filtering is NO LONGER
+  // done inside this client context.
+  //
+  // WooCommerce API handles:
+  //
+  // - Category
+  // - Age
+  // - Color
+  // - Size
+  // - Price
+  // - Search
+  // - Sorting
+  // - Pagination
+  //
+  // The `products` received here are
+  // already filtered and paginated
+  // by the server.
+  //
+  // ==========================
 
-  const filteredProducts = useMemo(() => {
-    let filtered = [...products];
+  const filteredProducts = safeProducts;
 
-    // Category
+  const paginatedProducts = safeProducts;
 
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter((product) =>
-        product.categories?.some((category) =>
-          selectedCategories.includes(category.slug),
-        ),
-      );
-    }
+  // ==========================
+  // Safe Pagination Values
+  // ==========================
 
-    // console.log("Selected Ages:", selectedAges);
+  const safeTotalPages =
+    Number(totalPages) || 0;
 
-    // Age
+  const safeTotalProducts =
+    Number(totalProducts) || 0;
 
-    if (selectedAges.length > 0) {
-      filtered = filtered.filter((product) =>
-        product.ages?.some((age) =>
-          selectedAges.some(
-            (selected) =>
-              selected.replace(/–/g, "-").trim() ===
-              age.replace(/–/g, "-").trim(),
-          ),
-        ),
-      );
-    }
-
-    // Color
-
-    if (selectedColors.length > 0) {
-      filtered = filtered.filter((product) =>
-        product.colors?.some((color) =>
-          selectedColors.some(
-            (selected) => selected.toLowerCase() === color.toLowerCase(),
-          ),
-        ),
-      );
-    }
-
-    // Price
-
-    filtered = filtered.filter(
-      (product) =>
-        product.price >= priceRange.min && product.price <= priceRange.max,
-    );
-
-    // Size
-
-    console.log(products[0].sizes);
-
-    if (selectedSizes.length > 0) {
-      filtered = filtered.filter((product) =>
-        product.sizes?.some((size) => selectedSizes.includes(size)),
-      );
-    }
-
-    // Search
-
-    if (searchQuery.trim() !== "") {
-      const keyword = searchQuery.toLowerCase().trim();
-
-      filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(keyword),
-      );
-    }
-
-    // Sorting
-
-    switch (sortBy) {
-      case "price-low":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-
-      case "price-high":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-
-      case "popular":
-        filtered.sort((a, b) => b.rating * b.reviews - a.rating * a.reviews);
-        break;
-
-      default:
-        filtered.sort((a, b) => b.id - a.id);
-    }
-
-    return filtered;
-  }, [
-    products,
-    selectedCategories,
-    selectedAges,
-    selectedColors,
-    priceRange,
-    sortBy,
-    searchQuery,
-    selectedSizes,
-  ]);
-
-  // pagination part
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * productsPerPage,
-    currentPage * productsPerPage,
-  );
-
-  // Clear All
+  // ==========================
+  // Clear All Filters
+  // ==========================
 
   const clearFilters = () => {
     setSelectedCategories([]);
+
     setSelectedAges([]);
+
     setSelectedColors([]);
+
     setSelectedSizes([]);
 
     setPriceRange({
@@ -221,59 +194,140 @@ export function ShopFilterProvider({
     });
 
     setSortBy("newest");
+
     setSearchQuery("");
+
+    setCurrentPage(1);
   };
 
+  // ==========================
+  // Context Value
+  // ==========================
+
   const value = {
+    // ==========================
+    // Products
+    // ==========================
+
+    products: safeProducts,
+
+    // ==========================
+    // Categories
+    // ==========================
+
     selectedCategories,
+
     setSelectedCategories,
 
+    // ==========================
+    // Ages
+    // ==========================
+
     selectedAges,
+
     setSelectedAges,
 
+    // ==========================
+    // Colors
+    // ==========================
+
     selectedColors,
+
     setSelectedColors,
 
-    priceRange,
-    setPriceRange,
+    // ==========================
+    // Sizes
+    // ==========================
 
     selectedSizes,
+
     setSelectedSizes,
 
-    sortBy,
-    setSortBy,
+    // ==========================
+    // Price
+    // ==========================
 
-    searchQuery,
-    setSearchQuery,
+    priceRange,
+
+    setPriceRange,
 
     minPrice,
+
     maxPrice,
 
+    // ==========================
+    // Sort
+    // ==========================
+
+    sortBy,
+
+    setSortBy,
+
+    // ==========================
+    // Search
+    // ==========================
+
+    searchQuery,
+
+    setSearchQuery,
+
+    // ==========================
+    // Products
+    // ==========================
+
     filteredProducts,
-    currentPage,
-    setCurrentPage,
-    productsPerPage,
-    totalPages,
+
     paginatedProducts,
 
-    totalProducts: products.length,
-    filteredCount: filteredProducts.length,
+    // ==========================
+    // Pagination
+    // ==========================
+
+    currentPage,
+
+    setCurrentPage,
+
+    productsPerPage,
+
+    totalPages: safeTotalPages,
+
+    totalProducts: safeTotalProducts,
+
+    // ==========================
+    // Current Page Product Count
+    // ==========================
+
+    filteredCount:
+      safeProducts.length,
+
+    // ==========================
+    // Actions
+    // ==========================
 
     clearFilters,
   };
 
   return (
-    <ShopFilterContext.Provider value={value}>
+    <ShopFilterContext.Provider
+      value={value}
+    >
       {children}
     </ShopFilterContext.Provider>
   );
 }
 
+// ==========================
+// useShopFilter Hook
+// ==========================
+
 export function useShopFilter() {
-  const context = useContext(ShopFilterContext);
+  const context =
+    useContext(ShopFilterContext);
 
   if (!context) {
-    throw new Error("useShopFilter must be used inside ShopFilterProvider");
+    throw new Error(
+      "useShopFilter must be used inside ShopFilterProvider"
+    );
   }
 
   return context;

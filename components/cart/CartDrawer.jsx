@@ -14,6 +14,31 @@ import {
 
 import { useCart } from "@/context/CartContext";
 
+// ==========================
+// Format Variant Value
+// ==========================
+
+function formatVariantValue(value) {
+  if (!value) return "";
+
+  // New attribute object
+  if (typeof value === "object") {
+    return String(
+      value.name ||
+        value.slug ||
+        value.value ||
+        ""
+    )
+      .replace(/-/g, " ")
+      .trim();
+  }
+
+  // Old string format
+  return String(value)
+    .replace(/-/g, " ")
+    .trim();
+}
+
 export default function CartDrawer() {
   const {
     cartItems,
@@ -369,7 +394,7 @@ export default function CartDrawer() {
             <div className="space-y-5">
               {cartItems.map((item) => (
                 <div
-                  key={`${item.id}-${item.size || ""}-${item.color || ""}`}
+                  key={`${item.id}-${formatVariantValue(item.size)}-${formatVariantValue(item.color)}`}
                   className="
                     flex
                     gap-3
@@ -532,16 +557,13 @@ export default function CartDrawer() {
                         "
                       >
                         {item.size && (
-                          <span>
-                            Size:{" "}
-                            <span className="font-medium text-gray-700">
-                              {item.size.replace(
-                                /-/g,
-                                " "
-                              )}
-                            </span>
-                          </span>
-                        )}
+  <span>
+    Size:{" "}
+    <span className="font-medium text-gray-700">
+      {formatVariantValue(item.size)}
+    </span>
+  </span>
+)}
 
                         {item.size &&
                           item.color && (
@@ -549,13 +571,13 @@ export default function CartDrawer() {
                           )}
 
                         {item.color && (
-                          <span>
-                            Color:{" "}
-                            <span className="font-medium text-gray-700">
-                              {item.color}
-                            </span>
-                          </span>
-                        )}
+  <span>
+    Color:{" "}
+    <span className="font-medium text-gray-700">
+      {formatVariantValue(item.color)}
+    </span>
+  </span>
+)}
                       </div>
                     )}
 

@@ -1,20 +1,60 @@
 "use client";
 
 import { useState } from "react";
+
 import AddToCartButton from "./AddToCartButton";
 import BuyNowButton from "./BuyNowButton";
 import ProductPrice from "./ProductPrice";
 import ProductQuantity from "./ProductQuantity";
 import ProductVariants from "./ProductVariants";
 
-export default function ProductInfo({ product }) {
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "");
+// ==========================
+// Get Variant Value
+// ==========================
 
-  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "");
+const getVariantValue = (item) => {
+  if (typeof item === "string") {
+    return item;
+  }
+
+  return (
+    item?.slug ||
+    item?.name ||
+    ""
+  );
+};
+
+export default function ProductInfo({
+  product,
+}) {
+  // ==========================
+  // Initial Size
+  // ==========================
+
+  const [selectedSize, setSelectedSize] =
+    useState(
+      getVariantValue(
+        product?.sizes?.[0]
+      )
+    );
+
+  // ==========================
+  // Initial Color
+  // ==========================
+
+  const [selectedColor, setSelectedColor] =
+    useState(
+      getVariantValue(
+        product?.colors?.[0]
+      )
+    );
 
   return (
     <div className="flex min-w-0 flex-col">
-      {/* Product Title */}
+
+      {/* ==========================
+          Product Title
+      ========================== */}
 
       <h1
         className="
@@ -29,24 +69,19 @@ export default function ProductInfo({ product }) {
         {product.name}
       </h1>
 
-      {/* Product Rating (Optional) */}
-
-      {/*
-      <div className="mt-4 flex items-center gap-2">
-        ★★★★★
-        <span className="text-sm text-gray-500">
-          ({product.reviewCount} Reviews)
-        </span>
-      </div>
-      */}
-
-      {/* Price */}
+      {/* ==========================
+          Price
+      ========================== */}
 
       <div className="mt-6">
-        <ProductPrice product={product} />
+        <ProductPrice
+          product={product}
+        />
       </div>
 
-      {/* Short Description */}
+      {/* ==========================
+          Short Description
+      ========================== */}
 
       {product.shortDescription && (
         <div
@@ -58,58 +93,84 @@ export default function ProductInfo({ product }) {
             text-gray-600
           "
           dangerouslySetInnerHTML={{
-            __html: product.shortDescription,
+            __html:
+              product.shortDescription,
           }}
         />
       )}
 
-      {/* Variants */}
+      {/* ==========================
+          Variants
+      ========================== */}
 
       <div className="mt-8">
         <ProductVariants
           product={product}
           selectedSize={selectedSize}
-          setSelectedSize={setSelectedSize}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
+          setSelectedSize={
+            setSelectedSize
+          }
+          selectedColor={
+            selectedColor
+          }
+          setSelectedColor={
+            setSelectedColor
+          }
         />
       </div>
 
-      {/* Quantity */}
+      {/* ==========================
+          Quantity
+      ========================== */}
 
       <div className="mt-8">
         <ProductQuantity />
       </div>
 
-      {/* Action Buttons */}
+      {/* ==========================
+          Action Buttons
+      ========================== */}
 
       <div
         className="
           mt-8
-
           flex
           flex-col
           gap-4
-
           sm:flex-row
         "
       >
+
+        {/* Buy Now */}
+
         <div className="flex-1">
           <BuyNowButton
             product={product}
-            selectedSize={selectedSize}
-            selectedColor={selectedColor}
+            selectedSize={
+              selectedSize
+            }
+            selectedColor={
+              selectedColor
+            }
           />
         </div>
+
+        {/* Add To Cart */}
 
         <div className="flex-1">
           <AddToCartButton
             product={product}
-            selectedSize={selectedSize}
-            selectedColor={selectedColor}
+            selectedSize={
+              selectedSize
+            }
+            selectedColor={
+              selectedColor
+            }
           />
         </div>
+
       </div>
+
     </div>
   );
 }

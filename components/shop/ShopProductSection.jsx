@@ -11,24 +11,25 @@ export default function ShopProductSection({
   noSection = true,
   noContainer = true,
 }) {
-  const { paginatedProducts } = useShopFilter();
+  const {
+    paginatedProducts,
+  } = useShopFilter();
 
   return (
     <>
-  {paginatedProducts.length === 0 ? (
-    <NoProductsFound />
-  ) : (
-    <ProductSection
-      products={paginatedProducts}
-      showHeader={false}
-      showButton={false}
-      noSection
-      noContainer
-    />
-    
-  )}
+      {paginatedProducts.length === 0 ? (
+        <NoProductsFound />
+      ) : (
+        <ProductSection
+          products={paginatedProducts}
+          showHeader={false}
+          showButton={false}
+          noSection
+          noContainer
+        />
+      )}
 
-  <Pagination />
-</>
+      <Pagination />
+    </>
   );
 }

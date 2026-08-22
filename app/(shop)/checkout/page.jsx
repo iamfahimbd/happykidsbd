@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 
 export default function CheckoutPage() {
-  const { cartItems, subtotal,clearCart } = useCart();
+  const { cartItems, subtotal, clearCart } = useCart();
 
   // ==========================
   // Delivery Area
@@ -213,23 +213,19 @@ export default function CheckoutPage() {
       // Success
       // ==========================
 
-      console.log(
-  "ORDER CREATED:",
-  data
-);
+      console.log("ORDER CREATED:", data);
 
-// ==========================
-// Clear Cart
-// ==========================
+      // ==========================
+      // Clear Cart
+      // ==========================
 
-clearCart();
+      clearCart();
 
-// ==========================
-// Redirect To Success Page
-// ==========================
+      // ==========================
+      // Redirect To Success Page
+      // ==========================
 
-window.location.href =
-  `/order-success?order=${data.order.id}`;
+      window.location.href = `/order-success?order=${data.order.id}`;
 
       // ==========================
       // TODO:
@@ -1058,11 +1054,21 @@ window.location.href =
                         "
                       >
                         {item.size && (
-                          <span>Size: {item.size.replace(/-/g, " ")}</span>
+                          <span>
+                            Size:{" "}
+                            {Array.isArray(item.size)
+                              ? item.size.join(", ").replace(/-/g, " ")
+                              : String(item.size).replace(/-/g, " ")}
+                          </span>
                         )}
 
-                        {item.size && item.color && (
-                          <span className="mx-1">•</span>
+                        {item.color && (
+                          <span>
+                            Color:{" "}
+                            {Array.isArray(item.color)
+                              ? item.color.join(", ")
+                              : String(item.color)}
+                          </span>
                         )}
 
                         {item.color && <span>Color: {item.color}</span>}
