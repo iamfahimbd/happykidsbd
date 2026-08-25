@@ -1,13 +1,36 @@
 "use client";
 
+import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import { useCart } from "@/context/CartContext";
-
 export default function CheckoutPage() {
-  const { cartItems, subtotal, clearCart } = useCart();
+  const searchParams = useSearchParams();
+
+  const isBuyNow = searchParams.get("buyNow") === "true";
+
+  const {
+    cartItems,
+    subtotal,
+    buyNowItem,
+    buyNowSubtotal,
+    clearCart,
+    clearBuyNow,
+  } = useCart();
+
+  // ==========================
+  // Checkout Items
+  // ==========================
+
+  const checkoutItems = isBuyNow ? (buyNowItem ? [buyNowItem] : []) : cartItems;
+
+  // ==========================
+  // Checkout Subtotal
+  // ==========================
+
+  const checkoutSubtotal = isBuyNow ? buyNowSubtotal : subtotal;
 
   // ==========================
   // Delivery Area
@@ -50,7 +73,7 @@ export default function CheckoutPage() {
   // Grand Total
   // ==========================
 
-  const grandTotal = Number(subtotal) + shippingCost;
+  const grandTotal = Number(checkoutSubtotal) + shippingCost;
 
   // ==========================
   // Input Handler
@@ -139,8 +162,11 @@ export default function CheckoutPage() {
     }
 
     // Prevent checkout with empty cart
-    if (!cartItems || cartItems.length === 0) {
-      alert("Your cart is empty.");
+    if (!checkoutItems || checkoutItems.length === 0) {
+      alert(
+        isBuyNow ? "No product selected for Buy Now." : "Your cart is empty.",
+      );
+
       return;
     }
 
@@ -166,9 +192,9 @@ export default function CheckoutPage() {
 
         paymentMethod,
 
-        items: cartItems,
+        items: checkoutItems,
 
-        subtotal: Number(subtotal),
+        subtotal: Number(checkoutSubtotal),
 
         shippingCost,
 
@@ -245,83 +271,85 @@ export default function CheckoutPage() {
   // Empty Cart
   // ==========================
 
-  if (!cartItems || cartItems.length === 0) {
+  if (!checkoutItems || checkoutItems.length === 0) {
     return (
       <main className="min-h-screen bg-gray-50">
         <div
           className="
-            mx-auto
-            flex
-            min-h-[70vh]
-            max-w-4xl
-            items-center
-            justify-center
-            px-4
-            py-12
-          "
+          mx-auto
+          flex
+          min-h-[70vh]
+          max-w-4xl
+          items-center
+          justify-center
+          px-4
+          py-12
+        "
         >
           <div
             className="
-              w-full
-              rounded-3xl
-              bg-white
-              p-8
-              text-center
-              shadow-sm
-              sm:p-12
-            "
+            w-full
+            rounded-3xl
+            bg-white
+            p-8
+            text-center
+            shadow-sm
+            sm:p-12
+          "
           >
             <div
               className="
-                mx-auto
-                mb-5
-                flex
-                h-20
-                w-20
-                items-center
-                justify-center
-                rounded-full
-                bg-sky-50
-                text-4xl
-              "
+              mx-auto
+              mb-5
+              flex
+              h-20
+              w-20
+              items-center
+              justify-center
+              rounded-full
+              bg-sky-50
+              text-4xl
+            "
             >
               🛒
             </div>
 
             <h1
               className="
-                text-2xl
-                font-bold
-                text-gray-900
-                sm:text-3xl
-              "
+              text-2xl
+              font-bold
+              text-gray-900
+              sm:text-3xl
+            "
             >
-              Your Cart is Empty
+              {isBuyNow ? "No Product Selected" : "Your Cart is Empty"}
             </h1>
 
             <p className="mt-3 text-gray-500">
-              Add some products to your cart before proceeding to checkout.
+              {isBuyNow
+                ? "Please select a product and try Buy Now again."
+                : "Add some products to your cart before proceeding to checkout."}
             </p>
 
             <Link
               href="/shop"
               className="
-                mt-7
-                inline-flex
-                h-12
-                items-center
-                justify-center
-                rounded-2xl
-                bg-primary
-                px-7
-                font-semibold
-                text-white
-                shadow-lg
-                shadow-sky-200/50
-                transition
-                hover:-translate-y-0.5
-                hover:shadow-xl
-              "
+              mt-7
+              inline-flex
+              h-12
+              items-center
+              justify-center
+              rounded-2xl
+              bg-primary
+              px-7
+              font-semibold
+              text-white
+              shadow-lg
+              shadow-sky-200/50
+              transition
+              hover:-translate-y-0.5
+              hover:shadow-xl
+            "
             >
               Continue Shopping
             </Link>
@@ -994,7 +1022,7 @@ export default function CheckoutPage() {
             {/* Products */}
 
             <div className="mt-6 space-y-5">
-              {cartItems.map((item) => (
+              {checkoutItems.map((item) => (
                 <div
                   key={`${item.id}-${item.size}-${item.color}`}
                   className="flex gap-4"
@@ -1070,8 +1098,6 @@ export default function CheckoutPage() {
                               : String(item.color)}
                           </span>
                         )}
-
-                        {item.color && <span>Color: {item.color}</span>}
                       </div>
                     )}
 
@@ -1143,7 +1169,7 @@ export default function CheckoutPage() {
                   text-gray-900
                 "
               >
-                ৳{Number(subtotal).toLocaleString()}
+                ৳{Number(checkoutSubtotal).toLocaleString()}
               </span>
             </div>
 

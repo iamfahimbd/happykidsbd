@@ -1,16 +1,62 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
+
 export default function BuyNowButton({
   product,
+  selectedSize = "",
+  selectedColor = "",
+  quantity = 1,
 }) {
+  const router = useRouter();
+
+  const {
+    setBuyNowProduct,
+  } = useCart();
+
   const handleBuyNow = () => {
+    // ==========================
+    // Buy Now Item
+    // ==========================
+
+    const item = {
+      id: product.id,
+
+      slug: product.slug,
+
+      name: product.name,
+
+      image: product.image,
+
+      price: product.price,
+
+      quantity:
+        Number(quantity) || 1,
+
+      size: selectedSize,
+
+      color: selectedColor,
+    };
+
     console.log(
-      "Buy Now:",
-      product.id
+      "BUY NOW ITEM:",
+      item
     );
 
-    // TODO:
-    // Redirect to Checkout
+    // ==========================
+    // Save Buy Now Product
+    // ==========================
+
+    setBuyNowProduct(item);
+
+    // ==========================
+    // Go To Checkout
+    // ==========================
+
+    router.push(
+      "/checkout?buyNow=true"
+    );
   };
 
   return (

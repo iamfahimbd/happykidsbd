@@ -9,38 +9,18 @@ import {
 
 const CartContext = createContext(null);
 
-// ==========================
-// Variant Value Normalizer
-// ==========================
-
-function normalizeVariant(value) {
-  if (!value) return "";
-
-  if (typeof value === "object") {
-    return String(
-      value.slug ||
-        value.name ||
-        value.value ||
-        ""
-    )
-      .toLowerCase()
-      .trim();
-  }
-
-  return String(value)
-    .toLowerCase()
-    .trim();
-}
-
-// ==========================
-// Cart Provider
-// ==========================
-
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
   const [isCartLoaded, setIsCartLoaded] =
     useState(false);
+
+  // ==========================
+  // Buy Now State
+  // ==========================
+
+  const [buyNowItem, setBuyNowItem] =
+    useState(null);
 
   // ==========================
   // Cart Drawer State
@@ -102,7 +82,10 @@ export function CartProvider({ children }) {
         error
       );
     }
-  }, [cartItems, isCartLoaded]);
+  }, [
+    cartItems,
+    isCartLoaded,
+  ]);
 
   // ==========================
   // Add Item
@@ -114,48 +97,32 @@ export function CartProvider({ children }) {
       product
     );
 
-    const productSize =
-      normalizeVariant(product.size);
-
-    const productColor =
-      normalizeVariant(product.color);
-
     setCartItems((prev) => {
       const existingItem =
-        prev.find((item) => {
-          return (
+        prev.find(
+          (item) =>
             item.id === product.id &&
-            normalizeVariant(item.size) ===
-              productSize &&
-            normalizeVariant(item.color) ===
-              productColor
-          );
-        });
+            item.size === product.size &&
+            item.color === product.color
+        );
 
       // ==========================
       // Existing Product + Variant
       // ==========================
 
       if (existingItem) {
-        return prev.map((item) => {
-          const sameVariant =
-            item.id === product.id &&
-            normalizeVariant(item.size) ===
-              productSize &&
-            normalizeVariant(item.color) ===
-              productColor;
-
-          if (!sameVariant) {
-            return item;
-          }
-
-          return {
-            ...item,
-            quantity:
-              Number(item.quantity || 0) +
-              Number(product.quantity || 1),
-          };
-        });
+        return prev.map((item) =>
+          item.id === product.id &&
+          item.size === product.size &&
+          item.color === product.color
+            ? {
+                ...item,
+                quantity:
+                  Number(item.quantity || 0) +
+                  Number(product.quantity || 1),
+              }
+            : item
+        );
       }
 
       // ==========================
@@ -166,18 +133,39 @@ export function CartProvider({ children }) {
         ...prev,
         {
           ...product,
-
           quantity:
             Number(product.quantity) || 1,
         },
       ];
     });
 
-    // ==========================
-    // Open Drawer
-    // ==========================
-
+    // Open drawer after adding
     openCart();
+  };
+
+  // ==========================
+  // Set Buy Now Item
+  // ==========================
+
+  const setBuyNowProduct = (product) => {
+    if (!product) {
+      setBuyNowItem(null);
+      return;
+    }
+
+    setBuyNowItem({
+      ...product,
+      quantity:
+        Number(product.quantity) || 1,
+    });
+  };
+
+  // ==========================
+  // Clear Buy Now Item
+  // ==========================
+
+  const clearBuyNow = () => {
+    setBuyNowItem(null);
   };
 
   // ==========================
@@ -189,23 +177,15 @@ export function CartProvider({ children }) {
     size,
     color
   ) => {
-    const normalizedSize =
-      normalizeVariant(size);
-
-    const normalizedColor =
-      normalizeVariant(color);
-
     setCartItems((prev) =>
-      prev.filter((item) => {
-        const sameVariant =
-          item.id === id &&
-          normalizeVariant(item.size) ===
-            normalizedSize &&
-          normalizeVariant(item.color) ===
-            normalizedColor;
-
-        return !sameVariant;
-      })
+      prev.filter(
+        (item) =>
+          !(
+            item.id === id &&
+            item.size === size &&
+            item.color === color
+          )
+      )
     );
   };
 
@@ -229,30 +209,17 @@ export function CartProvider({ children }) {
       return;
     }
 
-    const normalizedSize =
-      normalizeVariant(size);
-
-    const normalizedColor =
-      normalizeVariant(color);
-
     setCartItems((prev) =>
-      prev.map((item) => {
-        const sameVariant =
-          item.id === id &&
-          normalizeVariant(item.size) ===
-            normalizedSize &&
-          normalizeVariant(item.color) ===
-            normalizedColor;
-
-        if (!sameVariant) {
-          return item;
-        }
-
-        return {
-          ...item,
-          quantity: newQuantity,
-        };
-      })
+      prev.map((item) =>
+        item.id === id &&
+        item.size === size &&
+        item.color === color
+          ? {
+              ...item,
+              quantity: newQuantity,
+            }
+          : item
+      )
     );
   };
 
@@ -265,7 +232,7 @@ export function CartProvider({ children }) {
   };
 
   // ==========================
-  // Total Items
+  // Totals
   // ==========================
 
   const totalItems =
@@ -275,10 +242,6 @@ export function CartProvider({ children }) {
         Number(item.quantity || 0),
       0
     );
-
-  // ==========================
-  // Subtotal
-  // ==========================
 
   const subtotal =
     cartItems.reduce(
@@ -290,10 +253,24 @@ export function CartProvider({ children }) {
     );
 
   // ==========================
+  // Buy Now Total
+  // ==========================
+
+  const buyNowSubtotal =
+    buyNowItem
+      ? Number(buyNowItem.price || 0) *
+        Number(buyNowItem.quantity || 1)
+      : 0;
+
+  // ==========================
   // Context Value
   // ==========================
 
   const value = {
+    // ==========================
+    // Cart
+    // ==========================
+
     cartItems,
 
     addItem,
@@ -306,7 +283,19 @@ export function CartProvider({ children }) {
 
     isCartLoaded,
 
-    // Drawer
+    // ==========================
+    // Buy Now
+    // ==========================
+
+    buyNowItem,
+    setBuyNowProduct,
+    clearBuyNow,
+    buyNowSubtotal,
+
+    // ==========================
+    // Cart Drawer
+    // ==========================
+
     isCartOpen,
     openCart,
     closeCart,
